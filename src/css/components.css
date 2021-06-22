@@ -13,27 +13,46 @@ code {
 }
 
 .navbar {
-  background-color: lightskyblue;
-  color: black;
+  background-color: #1D8DEE;
   display: flex;
   justify-content: space-between;
 }
 
+.navbar-logo {
+  margin: 1%;
+  margin-left: 2%;
+  color: white;
+}
+
+.navbar-logo a{
+  color: white;
+}
+
+.navbar-buttons {
+  margin: 2%;
+  margin-right: 5%;
+}
+
+.navbar-item {
+  margin: 2%;
+  color: white;
+}
+
 .footer {
-  background-color: lightskyblue;
+  background-color: #1D8DEE;
   color: black;
 }
 
 .tweets {
-  background-color: lightgray;
+  /* background-color: #1E2128; */
+  background-color: white;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  /* flex-flow: row wrap; */
 }
 
 .tweet {
-  background-color: lightskyblue;
+  background-color: #1D8DEE;
   color: black;
   display: grid;
   grid-gap: 10px;
@@ -43,22 +62,24 @@ code {
   min-width: 500px;
 }
 
-.tweet-dp {
+.dp {
+  border-radius: 50%;
   width: 100px;
   height: 100px;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.tweet-dp {
   grid-row-start: 1;
   grid-row-end: 3;
   margin-top: 10%;
   margin-left: 10%;
   margin-right: 5%;
-  border-radius: 50%;
-  /* width: 100%; */
-  /* height: 100%; */
-  object-fit: cover;
-  overflow: hidden;
 }
 
 .tweet-username {
+  color: white;
   display: flex;
 
   grid-column-start: 2;
@@ -74,6 +95,21 @@ code {
 
   grid-row-start: 1;
   grid-row-end: 2;
+
+  margin-top: 9%;
+
+  color: white;
+}
+
+.tweet-like-button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  
 }
 
 .tweet-text {
@@ -84,6 +120,7 @@ code {
   grid-row-end: 3;
 
   margin: 0% 2%;
+  color: white;
 }
 
 .tweet-bar {
@@ -92,4 +129,88 @@ code {
 
   grid-row-start: 3;
   grid-row-end: 4;
+
+  color: white;
+}
+
+
+.profile {
+  width: auto;
+  display: grid;
+}
+
+.profile-dp {
+  grid-row-start: 1;
+  grid-row-end: 3;
+
+  grid-column-start: 1;
+  grid-column-end: 2;
+
+  margin-top: 10%;
+  margin-left: 10%;
+  margin-right: 5%;
+}
+
+.profile-username {
+  grid-row-start: 3;
+  grid-row-end: 4;
+
+  grid-column-start: 1;
+  grid-column-end: 2;
+  margin-left: 10%;
+}
+
+.profile-bio {
+  grid-row-start: 4;
+  grid-row-end: 5;
+
+  grid-column-start: 1;
+  grid-column-end: 4;
+
+  margin: 0% 5%;
+}
+
+.profile-tabs {
+  grid-row-start: 5;
+  grid-row-end: 6;
+
+  grid-column-start: 1;
+  grid-column-end: 4;
+
+  display: flex;
+  justify-content: space-evenly;
+  align-self: center;
+
+  margin: 2% 0%;
+}
+
+.profile-buttons {
+  grid-row-start: 1;
+  grid-row-end: 3;
+
+  grid-column-start: 3;
+  grid-column-end: 4;
+  align-self: center;
+}
+
+.tweet-form {
+  display: flex;
+  justify-content: space-around;
+  margin: 2% 2%;
+  
+  
+}
+
+
+
+.form-control {
+  margin: 20px 0;
+}
+
+.form-control input {
+  width: 100%;
+  height: 40px;
+  margin: 5px;
+  padding: 3px 7px;
+  font-size: 17px;
 }

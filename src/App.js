@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Tweets from "./components/Tweets";
+import Profile from "./components/Profile";
+import AddTweet from "./components/AddTweet";
 
 function App() {
   const tweets = [
@@ -44,11 +46,43 @@ function App() {
 
   return (
     <div className="App">
-      <>
+      <Router>
         <Navbar />
+
+
+      <Switch>
+        <Route path="/" exact>
+        <AddTweet/>
         <Tweets tweets={tweets} />
+
+        </Route>
+
+
+        <Route path="/explore" exact>
+
+        <Tweets tweets={tweets} />
+        
+
+        </Route>
+
+        <Route path="/users">
+          <Profile/>
+
+        </Route>
+
+
+        <Route path="/auth">
+
+
+        </Route>
+
+
+        </Switch>
+
+
+
         <Footer />
-      </>
+      </Router>
     </div>
   );
 }

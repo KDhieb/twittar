@@ -1,30 +1,39 @@
 import { Link } from "react-router-dom";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 
 import "../css/components.css";
 import DisplayPicture from "./DisplayPicture";
 
-const Tweet = ({ tweet }) => {
-  const { dp, tweeterid, username, date, text, liked, likes, retweeted } =
-    tweet;
 
+const Tweet = ({ tweet }) => {
+  const { dp, tweeterid, username, date, text, liked, likes, retweeted } = tweet;
   {
+
+  
+
     console.log(`${process.env.PUBLIC_URL}/assets/images/dp1.png`);
   }
   return (
-    <div className="tweet">
+    <div className="tweet card">
       <DisplayPicture
         src={`${process.env.PUBLIC_URL}/assets/images/${dp}`}
         alt="Display picture"
-        classname="grid-item tweet-dp"
+        classname="grid-item tweet-dp dp"
       />
-      <a
+      <Link
         className="grid-item tweet-username"
-        href={`/users/${tweeterid}`}
-      >{`@${username}`}</a>
+        to={`/users/${tweeterid}`} exact
+      >{`@${username}`} </Link>
+
+
       <p className="grid-item tweet-date">{date}</p>
       &nbsp;
       <p className="grid-item tweet-text">{text}</p>
-      <p className="grid-item tweet-bar">{`Liked:${liked} Likes: ${likes} Retweeted:${retweeted}`}</p>
+      <p className="grid-item tweet-bar">
+      <button className="tweet-like-button" onClick={console.log("heart!!")}> {liked ? <BsHeartFill size={20}/> : <BsHeart size={20}/>} </button>
+        {` ${likes}`}
+      
+      </p>
     </div>
   );
 };
