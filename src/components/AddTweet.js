@@ -1,26 +1,21 @@
 import "../css/components.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { addTweet, fetchTweets } from "../fetcher";
 
-const AddTweet = () => {
+const AddTweet = ({ id, onAddTweet }) => {
   const [text, setText] = useState("");
 
   const onSubmitForm = async (e) => {
-    console.log("works");
     e.preventDefault();
-    try {
-      // const body = { description };
-      // const response = fetch("http://localhost:5000/tweets", {
-      //   method: "POST",
-      //   header: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     tweeterID: 1,
-      //     tweet: text,
-      //     likes: 0,
-      //     retweets: 0,
-      //   }),
-      // });
-    } catch (err) {
-      console.error(err.message);
+    if (text != "") {
+      try {
+        console.log(id, text);
+        await addTweet(id, text);
+        setText("");
+        onAddTweet(await fetchTweets());
+      } catch (err) {
+        console.error(err.message);
+      }
     }
   };
 

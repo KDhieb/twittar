@@ -13,7 +13,7 @@ code {
 }
 
 .navbar {
-  background-color: #1D8DEE;
+  background-color: #1d8dee;
   display: flex;
   justify-content: space-between;
 }
@@ -24,7 +24,7 @@ code {
   color: white;
 }
 
-.navbar-logo a{
+.navbar-logo a {
   color: white;
 }
 
@@ -39,7 +39,7 @@ code {
 }
 
 .footer {
-  background-color: #1D8DEE;
+  background-color: #1d8dee;
   color: black;
   margin-top: 10%;
 }
@@ -53,7 +53,7 @@ code {
 }
 
 .tweet {
-  background-color: #1D8DEE;
+  background-color: #1d8dee;
   color: black;
   display: grid;
   grid-gap: 10px;
@@ -110,10 +110,10 @@ code {
   font: inherit;
   cursor: pointer;
   outline: inherit;
-  
 }
 
 .tweet-text {
+  /* border: 1px solid red; */
   grid-column-start: 2;
   grid-column-end: 4;
 
@@ -133,7 +133,6 @@ code {
 
   color: white;
 }
-
 
 .profile {
   width: auto;
@@ -198,11 +197,7 @@ code {
   display: flex;
   justify-content: space-around;
   margin: 2% 2%;
-  
-  
 }
-
-
 
 .form-control {
   margin: 20px 0;

@@ -2,9 +2,11 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
+const bodyParser = require("body-parser");
 // middleware
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 
 //ROUTES
 
@@ -100,7 +102,22 @@ app.get("/tweets", async (req, res) => {
   try {
     //   const { id } = req.params;
     const tweets = await pool.query(
-      `SELECT * FROM tweets order BY tweets.date ASC`
+      `SELECT * FROM tweets order BY tweets.id DESC`
+    );
+
+    res.json(tweets);
+    console.log(tweets.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+app.get("/tweets/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tweets = await pool.query(
+      `SELECT * FROM tweets WHERE tweeterID = $1 order BY tweets.id DESC`,
+      [id]
     );
 
     res.json(tweets);

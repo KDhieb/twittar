@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import "../css/components.css";
 import DisplayPicture from "./DisplayPicture";
+import { fetchProfile } from "../fetcher";
 
 const Tweet = ({ tweet }) => {
   const { tweeterid, date, likes, retweets } = tweet;
@@ -12,15 +12,12 @@ const Tweet = ({ tweet }) => {
   const [dp, setDp] = useState("dp-blank.png");
   const [liked, setLiked] = useState(false);
 
-  const fetchProfile = async () => {
-    const response = await fetch(`http://localhost:5000/users/${tweeterid}`);
-    const data = await response.json();
-    console.log(data.rows);
-    setUsername(data.rows[0].username);
-    setDp(data.rows[0].imagelink);
-  };
-
-  if (!username) fetchProfile();
+  useEffect(async () => {
+    fetchProfile(tweeterid).then((data) => {
+      setUsername(data.username);
+      setDp(data.imagelink);
+    });
+  }, []);
 
   return (
     <div className="tweet card">

@@ -1,23 +1,17 @@
 import "../css/components.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchTweets } from "../fetcher";
 
 import Tweet from "./Tweet";
 
-const Tweets = () => {
-  const [tweets, setTweets] = useState([]);
+const Tweets = ({ tweets }) => {
+  // const [tweets, setTweets] = useState([]);
 
-  const fetchTweets = async () => {
-    const response = await fetch("http://localhost:5000/tweets");
-    const data = await response.json();
-    console.log(data.rows);
-    setTweets(data.rows);
-  };
-
-  if (tweets === []) fetchTweets();
-
-  if (tweets.length == 0) {
-    fetchTweets();
-  }
+  // useEffect(() => {
+  //   fetchTweets().then((data) => {
+  //     setTweets(data);
+  //   });
+  // }, []);
 
   return (
     <div className="tweets">
