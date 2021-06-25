@@ -15,7 +15,7 @@ const AddTweet = () => {
       {/* <div className="form-control"> */}
         <input className="tweet-form-input"
           type="text"
-          placeholder="Add a Tweet"
+          placeholder=" Add a Tweet"
           value={text}
           onChange={(e) => setText(e.target.value)}
           size={100}
@@ -23,7 +23,7 @@ const AddTweet = () => {
         />
       {/* </div> */}
 
-      <input className="btn btn-primary" type="submit" value="Tweet!" />
+      <input className="btn btn-primary font-weight-bold" type="submit" value="Tweet" />
       {/* </div> */}
     </form>
         </div>
