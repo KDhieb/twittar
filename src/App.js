@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -6,12 +6,7 @@ import Tweets from "./components/Tweets";
 import Profile from "./components/Profile";
 import AddTweet from "./components/AddTweet";
 
-
-
-
-
 function App() {
-
   const tweets = [
     {
       tweetid: 1,
@@ -53,37 +48,25 @@ function App() {
       <Router>
         <Navbar />
 
+        <Switch>
+          <Route path="/" exact>
+            <AddTweet />
+            <Tweets tweets={tweets} />
+          </Route>
 
-      <Switch>
-        <Route path="/" exact>
-        <AddTweet/>
-        <Tweets tweets={tweets} />
+          <Route path="/explore" exact>
+            <Tweets tweets={tweets} />
+          </Route>
 
-        </Route>
+          <Route
+            path="/users/:id"
+            render={({ match }) => <Profile id={match.params.id} />}
+          >
+            {/* <Profile/> */}
+          </Route>
 
-
-        <Route path="/explore" exact>
-
-        <Tweets tweets={tweets} />
-        
-
-        </Route>
-
-        <Route path="/users">
-          <Profile/>
-
-        </Route>
-
-
-        <Route path="/auth">
-
-
-        </Route>
-
-
+          <Route path="/auth"></Route>
         </Switch>
-
-
 
         <Footer />
       </Router>
