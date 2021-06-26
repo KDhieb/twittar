@@ -2,15 +2,11 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
-const bodyParser = require("body-parser");
 // middleware
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.json());
 
 //ROUTES
-
-// create user
 
 app.post("/createUser", async (req, res) => {
   try {
@@ -45,6 +41,225 @@ app.post("/addTweet", async (req, res) => {
     res.json(newTweet.rows);
     console.log(newTweet.rows);
     //   console.log(`NEW USER ID: ${id}`);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+const updateLikeCount = async (tweetID, increment) => {
+  try {
+    const update = await pool.query(
+      `UPDATE tweets SET likes
+          = likes + $1
+          WHERE id = $2 RETURNING *`,
+      [increment, tweetID]
+    );
+
+    return update;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+const updateRetweetCount = async (tweetID, increment) => {
+  try {
+    const update = await pool.query(
+      `UPDATE tweets SET retweets
+          = retweets + $1
+          WHERE id = $2 RETURNING *`,
+      [increment, tweetID]
+    );
+
+    return update;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+// check if liked
+
+app.get("/tweets/liked/:tweetid/:likerid", async (req, res) => {
+  try {
+    const { tweetid, likerid } = req.params;
+    const likedAlready = await pool.query(
+      `SELECT
+        CASE WHEN EXISTS
+        (
+              SELECT * FROM tweetLikes WHERE tweetID = $1
+              AND likerID = $2
+        )
+        THEN 'TRUE'
+        ELSE 'FALSE'
+     END`,
+      [tweetid, likerid]
+    );
+
+    res.send({ response: likedAlready.rows[0].case == "TRUE" });
+
+    // return likedAlready.rows[0].case == "TRUE";
+    // console.log(tweets.rows[0]);
+  } catch (err) {
+    // console.log(err.message);
+  }
+});
+
+// //like tweet
+app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
+  try {
+    const { tweetID, likerID } = req.body;
+    // const { tweetid, likerid } = req.params;
+
+    const likedAlready = await pool.query(
+      `SELECT
+      CASE WHEN EXISTS
+      (
+            SELECT * FROM tweetLikes WHERE tweetID = $1
+            AND likerID = $2
+      )
+      THEN 'TRUE'
+      ELSE 'FALSE'
+   END`,
+      [tweetID, likerID]
+    );
+
+    console.log(likedAlready);
+
+    let resp;
+    let increment;
+
+    if (likedAlready.rows[0].case == "TRUE") {
+      resp = await pool.query(
+        `DELETE FROM tweetLikes WHERE
+              $1 = tweetID AND
+              $2 = likerID`,
+        [tweetID, likerID]
+      );
+
+      increment = -1;
+
+      console.log("Like removed!");
+    } else {
+      resp = await pool.query(
+        `INSERT INTO tweetLikes
+          (tweetID, likerID) VALUES (
+              $1, $2)`,
+        [tweetID, likerID]
+      );
+
+      increment = 1;
+      console.log("Like added!");
+    }
+    console.log(`INCREMENT = ${increment}`);
+    updateLikeCount(tweetID, increment);
+
+    // res.json(resp);
+    res.send({ liked: likedAlready.rows[0].case == "TRUE" });
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//like tweet
+// app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
+//   try {
+//     const { tweetID, likerID } = req.body;
+//     // const { tweetid, likerid } = req.params;
+
+//     const likedAlready = await pool.query(
+//       `SELECT
+//       CASE WHEN EXISTS
+//       (SELECT * FROM tweetLikes WHERE tweetID = $1 AND likerID = $2)
+//       THEN
+//       DELETE FROM tweetLikes WHERE
+//       $1 = tweetID AND
+//       $2 = likerID AND
+//       ELSE
+//       INSERT INTO tweetLikes
+//       (tweetID, likerID) VALUES ($1, $2)
+//       END
+//       SELECT
+//       CASE WHEN EXISTS
+//       (SELECT * FROM tweetLikes WHERE tweetID = $1 AND likerID = $2)
+//       THEN
+//       1
+//       ELSE
+//       0
+//       END
+//       `,
+//       [tweetID, likerID]
+//     );
+
+//     console.log(likedAlready);
+
+//     let resp;
+//     let increment;
+
+//     increment = -1;
+
+//     increment = 1;
+
+//     res.send(likedAlready);
+
+//     console.log(likedAlready.rows[0].case == "TRUE");
+
+//     // res.json(resp);
+//     // res.send({ liked: likedAlready.rows[0].case == "TRUE" });
+//   } catch (err) {
+//     console.error(err.message);
+//   }
+// });
+
+// follow user
+app.post("/users/follow/:followerid/:followedid", async (req, res) => {
+  try {
+    // const { tweetID, likerID } = req.body;
+    const { followerid, followedid } = req.params;
+
+    const followedAlready = await pool.query(
+      `SELECT
+      CASE WHEN EXISTS
+      (
+            SELECT * FROM followings WHERE followerID = $1
+            AND followedID = $2
+      )
+      THEN 'TRUE'
+      ELSE 'FALSE'
+   END`,
+      [followerid, followedid]
+    );
+
+    console.log(followedAlready);
+
+    let resp;
+    let increment;
+
+    if (followedAlready.rows[0].case == "TRUE") {
+      resp = await pool.query(
+        `DELETE FROM followings WHERE
+              $1 = followerID AND
+              $2 = followedID`,
+        [followerid, followedid]
+      );
+
+      increment = -1;
+
+      console.log("Like removed!");
+    } else {
+      resp = await pool.query(
+        `INSERT INTO followings
+          (followerID, followedID) VALUES (
+              $1, $2)`,
+        [followerid, followedid]
+      );
+
+      increment = 1;
+      console.log("Like added!");
+    }
+    console.log(`INCREMENT = ${increment}`);
+    // updateLikeCount(tweetID, increment);
+
+    // res.json(resp);
+    res.send({ followed: followedAlready.rows[0].case == "TRUE" });
   } catch (err) {
     console.error(err.message);
   }

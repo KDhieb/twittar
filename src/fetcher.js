@@ -30,8 +30,49 @@ const addTweet = async (id, text) => {
       retweets: 0,
     }),
   });
-
-  console.log(response);
 };
 
-export { fetchProfile, fetchTweets, fetchUserTweets, addTweet };
+const isLiked = async (tweetID, likerID) => {
+  const likedAlready = await fetch(
+    `http://localhost:5000/tweets/liked/${tweetID}/${likerID}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const data = await likedAlready.json();
+
+  return data.response;
+};
+
+const likeTweet = async (tweetID, likerID) => {
+  const response = await fetch(
+    `http://localhost:5000/tweets/like/${tweetID}/${likerID}`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        tweetID: tweetID,
+        likerID: likerID,
+      }),
+    }
+  );
+  const liked = await response.json();
+  return liked.liked;
+};
+
+export {
+  fetchProfile,
+  fetchTweets,
+  fetchUserTweets,
+  addTweet,
+  isLiked,
+  likeTweet,
+};

@@ -1,23 +1,38 @@
 import { Link } from "react-router-dom";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { useState, useEffect } from "react";
-import "../css/components.css";
 import DisplayPicture from "./DisplayPicture";
-import { fetchProfile } from "../fetcher";
+import { fetchProfile, isLiked, likeTweet } from "../fetcher";
 
-const Tweet = ({ tweet }) => {
-  const { tweeterid, date, likes, retweets } = tweet;
+import "../css/components.css";
+
+const Tweet = ({ tweet, authUserID }) => {
+  const { id, tweeterid, date, likes, retweets } = tweet;
   const text = tweet.tweet;
   const [username, setUsername] = useState(null);
   const [dp, setDp] = useState("dp-blank.png");
-  const [liked, setLiked] = useState(false);
+  const [likeObj, setLikeObj] = useState({ state: false, count: likes });
 
   useEffect(async () => {
     fetchProfile(tweeterid).then((data) => {
       setUsername(data.username);
       setDp(data.imagelink);
     });
+    isLiked(id, authUserID).then((data) => {
+      setLikeObj({ state: data, count: likes });
+    });
   }, []);
+
+  const onClickLike = () => {
+    likeTweet(id, authUserID).then((data) => {
+      console.log(`data: ${data}`);
+      if (data) {
+        setLikeObj({ state: !data, count: likeObj.count - 1 });
+      } else {
+        setLikeObj({ state: !data, count: likeObj.count + 1 });
+      }
+    });
+  };
 
   return (
     <div className="tweet card">
@@ -39,11 +54,15 @@ const Tweet = ({ tweet }) => {
       &nbsp;
       <p className="grid-item tweet-text">{text}</p>
       <p className="grid-item tweet-bar">
-        <button className="tweet-like-button" onClick={console.log("heart!!")}>
+        <button className="tweet-like-button" onClick={onClickLike}>
           {" "}
-          {liked ? <BsHeartFill size={20} /> : <BsHeart size={20} />}{" "}
+          {likeObj.state ? (
+            <BsHeartFill style={{ color: "red" }} size={20} />
+          ) : (
+            <BsHeart size={20} />
+          )}{" "}
         </button>
-        {` ${likes}`}
+        {` ${likeObj.count}`}
       </p>
     </div>
   );

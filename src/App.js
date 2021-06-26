@@ -32,16 +32,18 @@ function App() {
         <Switch>
           <Route path="/" exact>
             <AddTweet id={authUserId} onAddTweet={onAddTweet} />
-            <Tweets tweets={homeTweets} />
+            <Tweets tweets={homeTweets} authUserID={authUserId} />
           </Route>
 
           <Route path="/explore" exact>
-            <Tweets tweets={exploreTweets} />
+            <Tweets tweets={exploreTweets} authUserID={authUserId} />
           </Route>
 
           <Route
             path="/users/:id"
-            render={({ match }) => <Profile id={match.params.id} />}
+            render={({ match }) => (
+              <Profile id={match.params.id} authUserID={authUserId} />
+            )}
           ></Route>
 
           <Route path="/auth"></Route>

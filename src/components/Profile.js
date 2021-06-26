@@ -5,7 +5,7 @@ import Tweets from "./Tweets";
 import isEmpty from "../utility";
 import { fetchProfile, fetchUserTweets } from "../fetcher";
 
-const Profile = ({ dp, authUserId }) => {
+const Profile = ({ dp, authUserID }) => {
   let { id } = useParams();
 
   const [profile, setProfile] = useState({});
@@ -27,6 +27,10 @@ const Profile = ({ dp, authUserId }) => {
     });
   }, []);
 
+  const onClickFollow = async (followerID, followedID) => {
+    alert("following");
+  };
+
   return (
     <>
       <div className="profile">
@@ -47,18 +51,23 @@ const Profile = ({ dp, authUserId }) => {
         </div>
 
         <div className="grid-item profile-buttons">
-          {authUserId === id ? (
+          {authUserID === parseInt(id) ? (
             <Link className="btn btn-default bg-light text-dark border border-secondary">
               Edit
             </Link>
           ) : (
-            <Link className="btn btn-default bg-light text-dark border border-secondary">
+            <Link
+              className="btn btn-default bg-light text-dark border border-secondary"
+              onClick={() => {
+                onClickFollow(authUserID, parseInt(id));
+              }}
+            >
               Follow
             </Link>
           )}
         </div>
       </div>
-      <Tweets tweets={userTweets}></Tweets>
+      <Tweets tweets={userTweets} authUserID={authUserID}></Tweets>
     </>
   );
 };

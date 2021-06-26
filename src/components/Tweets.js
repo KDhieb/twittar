@@ -4,7 +4,7 @@ import { fetchTweets } from "../fetcher";
 
 import Tweet from "./Tweet";
 
-const Tweets = ({ tweets }) => {
+const Tweets = ({ tweets, authUserID }) => {
   // const [tweets, setTweets] = useState([]);
 
   // useEffect(() => {
@@ -16,7 +16,7 @@ const Tweets = ({ tweets }) => {
   return (
     <div className="tweets">
       {tweets.map((aTweet) => (
-        <Tweet key={aTweet.id} tweet={aTweet}></Tweet>
+        <Tweet key={aTweet.id} tweet={aTweet} authUserID={authUserID}></Tweet>
       ))}
     </div>
   );
