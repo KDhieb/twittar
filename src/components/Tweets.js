@@ -16,6 +16,13 @@ const Tweets = ({ tweets, authUserID, forceUpdate, onDelete }) => {
           onDelete={onDelete}
         ></Tweet>
       ))}
+
+      {tweets.length == 0 && (
+        <h3>
+          You are not following anyone yet! Follow others to keep up with their
+          tweets!
+        </h3>
+      )}
     </div>
   );
 };

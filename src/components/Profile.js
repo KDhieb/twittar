@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import DisplayPicture from "./DisplayPicture";
 import Tweets from "./Tweets";
-// import isEmpty from "../utility";
+
 import {
   fetchProfile,
   fetchUserTweets,

@@ -5,6 +5,8 @@ import Navbar from "./components/Navbar";
 import Tweets from "./components/Tweets";
 import Profile from "./components/Profile";
 import AddTweet from "./components/AddTweet";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
 import { fetchTweets, fetchHomeTweets } from "./fetcher";
 
 function App() {
@@ -76,6 +78,14 @@ function App() {
           ></Route>
 
           <Route path="/auth"></Route>
+
+          <Route path="/signup">
+            <Signup />
+          </Route>
+
+          <Route path="/login">
+            <Login />
+          </Route>
         </Switch>
 
         <Footer />

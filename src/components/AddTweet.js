@@ -28,7 +28,6 @@ const AddTweet = ({ id, onAddTweet, forceUpdate }) => {
           placeholder=" Add a Tweet"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          // size={100}
           maxLength={255}
         />
         {/* </div> */}
