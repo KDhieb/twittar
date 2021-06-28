@@ -70,7 +70,7 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
 
         <div className="grid-item profile-tabs nav nav-tabs">
           <Link className="nav-link">Tweets: {tweetCount}</Link>
-          <Link className="nav-link">Likes</Link>
+          {/* <Link className="nav-link">Likes</Link> */}
           <Link className="nav-link">Followers: {followerCount}</Link>
           <Link className="nav-link">Following: {followingCount}</Link>
         </div>

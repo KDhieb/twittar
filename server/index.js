@@ -365,7 +365,7 @@ app.get("/tweets/home/user/:id", async (req, res) => {
     const tweets = await pool.query(
       `SELECT * FROM tweets 
       INNER JOIN (SELECT followedid FROM followings WHERE followerid = $1) AS res ON res.followedid = tweets.tweeterID
-      `,
+      order BY tweets.date DESC`,
       [id]
     );
 
