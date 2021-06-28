@@ -77,7 +77,7 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
                 onClickFollow(authUserID, parseInt(id));
               }}
             >
-              Follow
+              {following ? "Unfollow" : "Follow"}
             </Link>
           )}
         </div>

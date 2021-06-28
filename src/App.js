@@ -62,6 +62,7 @@ function App() {
             path="/users/:id"
             render={({ match }) => (
               <Profile
+                key={window.location.pathname}
                 id={match.params.id}
                 authUserID={authUserId}
                 forceUpdate={forceUpdate}
