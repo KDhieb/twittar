@@ -7,23 +7,26 @@ const Navbar = (props) => {
     <div className="navbar">
       <h1 className="navbar-logo">
         <Link to="/" exact>
-          Twittar Lite
+          <img
+            className="navbar-logo"
+            src={`${process.env.PUBLIC_URL}/assets/images/twittar_white.png`}
+          ></img>
         </Link>
       </h1>
       <div className="navbar-buttons">
-        <Link className="navbar-item" to="/" text="Home">
+        <Link className="navbar-item nav-link" to="/" text="Home">
           Home
         </Link>
-        <Link className="navbar-item" to="/explore" text="Explore">
+        <Link className="navbar-item nav-link" to="/explore" text="Explore">
           Explore
         </Link>
-        <Link className="navbar-item" to="/users/1">
+        <Link className="navbar-item nav-link" to={`/users/${props.id}`}>
           Profile
         </Link>
-        <Link className="navbar-item" to="/auth">
+        <Link className="navbar-item nav-link" to="/auth">
           Logout
         </Link>
-        <p className="navbar-item">Welcome, user {props.id}</p>
+        <Link className="navbar-item nav-link">Welcome, User {props.id}</Link>
       </div>
     </div>
   );

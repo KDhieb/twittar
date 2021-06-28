@@ -284,16 +284,15 @@ app.delete("/users/:id", async (req, res) => {
 app.delete("/tweets/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    // const { tweetID } = req.body;
     const deleteTweet = await pool.query(`DELETE FROM tweets WHERE id = $1`, [
       id,
     ]);
-    res.json("Tweet was deleted");
+    res.send("Deleted");
   } catch (err) {
     console.log(err.message);
   }
 });
-
-// get all tweets
 
 // get profile
 app.get("/users/:id", async (req, res) => {
@@ -327,6 +326,7 @@ app.get("/tweets", async (req, res) => {
   }
 });
 
+// get user's tweets
 app.get("/tweets/user/:id", async (req, res) => {
   try {
     const { id } = req.params;

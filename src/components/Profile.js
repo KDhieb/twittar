@@ -2,10 +2,15 @@ import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import DisplayPicture from "./DisplayPicture";
 import Tweets from "./Tweets";
-import isEmpty from "../utility";
-import { fetchProfile, fetchUserTweets } from "../fetcher";
+// import isEmpty from "../utility";
+import {
+  fetchProfile,
+  fetchUserTweets,
+  checkIfFollowing,
+  followUser,
+} from "../fetcher";
 
-const Profile = ({ dp, authUserID }) => {
+const Profile = ({ dp, authUserID, forceUpdate }) => {
   let { id } = useParams();
 
   const [profile, setProfile] = useState({});
@@ -13,6 +18,7 @@ const Profile = ({ dp, authUserID }) => {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [userTweets, setUserTweets] = useState([]);
+  const [following, setFollowing] = useState([false]);
 
   useEffect(async () => {
     await fetchProfile(id).then((data) => {
@@ -22,6 +28,12 @@ const Profile = ({ dp, authUserID }) => {
       setBio(data.bio);
     });
 
+    if (id != authUserID) {
+      await checkIfFollowing(authUserID, id).then((data) => {
+        setFollowing(data);
+      });
+    }
+
     await fetchUserTweets(id).then((data) => {
       setUserTweets(data);
     });
@@ -29,6 +41,9 @@ const Profile = ({ dp, authUserID }) => {
 
   const onClickFollow = async (followerID, followedID) => {
     alert("following");
+    await followUser(authUserID, id).then((data) => {
+      setFollowing(data);
+    });
   };
 
   return (
@@ -67,7 +82,11 @@ const Profile = ({ dp, authUserID }) => {
           )}
         </div>
       </div>
-      <Tweets tweets={userTweets} authUserID={authUserID}></Tweets>
+      <Tweets
+        tweets={userTweets}
+        authUserID={authUserID}
+        forceUpdate={forceUpdate}
+      ></Tweets>
     </>
   );
 };

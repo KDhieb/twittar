@@ -22,6 +22,8 @@ code {
   margin: 1%;
   margin-left: 2%;
   color: white;
+  height: 50px;
+  width: auto;
 }
 
 .navbar-logo a {
@@ -31,11 +33,15 @@ code {
 .navbar-buttons {
   margin: 2%;
   margin-right: 5%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
 }
 
 .navbar-item {
   margin: 2%;
   color: white;
+  height: 5%;
 }
 
 .footer {
@@ -62,6 +68,7 @@ code {
   margin: 1% 20%;
   max-width: 500px;
   min-width: 500px;
+  grid-auto-rows: 1fr;
 }
 
 .dp {
@@ -84,29 +91,44 @@ code {
 .tweet-username {
   /* border: 1px solid red; */
   color: white;
+}
+
+.tweet-username-date {
+  color: white;
   display: flex;
+  justify-content: space-evenly;
 
   grid-column-start: 2;
-  grid-column-end: 3;
+  grid-column-end: 4;
 
   grid-row-start: 1;
   grid-row-end: 2;
 }
 
-.tweet-date {
+.tweet-like-button {
   /* border: 1px solid red; */
-  grid-column-start: 3;
-  grid-column-end: 4;
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.tweet-delete-wrapper {
+  /* border: 1px solid red; */
+  grid-column-start: 4;
+  grid-column-end: 5;
 
   grid-row-start: 1;
   grid-row-end: 2;
 
   margin-top: 10%;
-
   color: white;
 }
 
-.tweet-like-button {
+.tweet-delete-button {
   /* border: 1px solid red; */
   background: none;
   color: inherit;

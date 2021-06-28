@@ -2,7 +2,7 @@ import "../css/components.css";
 import { useState, useEffect } from "react";
 import { addTweet, fetchTweets } from "../fetcher";
 
-const AddTweet = ({ id, onAddTweet }) => {
+const AddTweet = ({ id, onAddTweet, forceUpdate }) => {
   const [text, setText] = useState("");
 
   const onSubmitForm = async (e) => {
@@ -12,7 +12,7 @@ const AddTweet = ({ id, onAddTweet }) => {
         console.log(id, text);
         await addTweet(id, text);
         setText("");
-        onAddTweet(await fetchTweets());
+        forceUpdate();
       } catch (err) {
         console.error(err.message);
       }
@@ -22,8 +22,6 @@ const AddTweet = ({ id, onAddTweet }) => {
   return (
     <div>
       <form className="tweet-form" onSubmit={onSubmitForm}>
-        {/* <div className="tweet-form"> */}
-        {/* <div className="form-control"> */}
         <input
           className="tweet-form-input"
           type="text"

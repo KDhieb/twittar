@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsHeart, BsHeartFill, BsX } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import DisplayPicture from "./DisplayPicture";
-import { fetchProfile, isLiked, likeTweet } from "../fetcher";
+import { fetchProfile, isLiked, likeTweet, deleteTweet } from "../fetcher";
 
 import "../css/components.css";
 
-const Tweet = ({ tweet, authUserID }) => {
+const Tweet = ({ tweet, authUserID, forceUpdate }) => {
   const { id, tweeterid, date, likes, retweets } = tweet;
   const text = tweet.tweet;
   const [username, setUsername] = useState(null);
@@ -34,6 +34,11 @@ const Tweet = ({ tweet, authUserID }) => {
     });
   };
 
+  const onClickDelete = async () => {
+    await deleteTweet(id);
+    forceUpdate();
+  };
+
   return (
     <div className="tweet card">
       <DisplayPicture
@@ -41,16 +46,12 @@ const Tweet = ({ tweet, authUserID }) => {
         alt="Display picture"
         classname="grid-item tweet-dp dp"
       />
-      <Link
-        className="grid-item tweet-username"
-        to={`/users/${tweeterid}`}
-        exact
-      >
-        {`@${username}`}{" "}
-      </Link>
-      <p className="grid-item tweet-date">
-        {new Date(date).toLocaleDateString()}
-      </p>
+      <div className="grid-item tweet-username-date">
+        <Link className="tweet-username" to={`/users/${tweeterid}`} exact>
+          {`@${username}`}{" "}
+        </Link>
+        <p>{new Date(date).toLocaleDateString()}</p>
+      </div>
       &nbsp;
       <p className="grid-item tweet-text">{text}</p>
       <p className="grid-item tweet-bar">
@@ -63,6 +64,13 @@ const Tweet = ({ tweet, authUserID }) => {
           )}{" "}
         </button>
         {` ${likeObj.count}`}
+      </p>
+      <p className="grid-item tweet-delete-wrapper">
+        {tweeterid == authUserID && (
+          <button className="tweet-delete-button" onClick={onClickDelete}>
+            <BsX size={20} />
+          </button>
+        )}
       </p>
     </div>
   );

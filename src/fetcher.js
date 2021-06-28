@@ -68,6 +68,27 @@ const likeTweet = async (tweetID, likerID) => {
   return liked.liked;
 };
 
+const deleteTweet = async (tweetID) => {
+  await fetch(`http://localhost:5000/tweets/${tweetID}`, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "DELETE",
+  });
+  return;
+};
+
+const checkIfFollowing = async (followerID, followedID) => {};
+
+const followUser = async (followerID, followedID) => {};
+
+//TODO
+const isRetweeted = async (tweetID, retweeterID) => {};
+
+//TODO
+const retweetTweet = async (tweetID, retweeterID) => {};
+
 export {
   fetchProfile,
   fetchTweets,
@@ -75,4 +96,7 @@ export {
   addTweet,
   isLiked,
   likeTweet,
+  checkIfFollowing,
+  followUser,
+  deleteTweet,
 };
