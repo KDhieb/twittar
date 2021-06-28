@@ -4,7 +4,7 @@ import "../css/components.css";
 
 import Tweet from "./Tweet";
 
-const Tweets = ({ tweets, authUserID, forceUpdate }) => {
+const Tweets = ({ tweets, authUserID, forceUpdate, onDelete }) => {
   return (
     <div className="tweets">
       {tweets.map((aTweet) => (
@@ -13,10 +13,17 @@ const Tweets = ({ tweets, authUserID, forceUpdate }) => {
           tweet={aTweet}
           authUserID={authUserID}
           forceUpdate={forceUpdate}
+          onDelete={onDelete}
         ></Tweet>
       ))}
     </div>
   );
+};
+
+Tweets.defaultProps = {
+  onDelete: () => {
+    console.log("on delete default function");
+  },
 };
 
 export default Tweets;

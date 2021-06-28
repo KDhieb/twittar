@@ -26,8 +26,7 @@ app.post("/createUser", async (req, res) => {
   }
 });
 
-// create tweet
-
+// add tweet
 app.post("/addTweet", async (req, res) => {
   try {
     const { tweeterID, tweet, likes, retweets } = req.body;
@@ -38,6 +37,7 @@ app.post("/addTweet", async (req, res) => {
       [tweeterID, tweet, likes, retweets]
     );
     //   const id = newUser.rows[0].id; // WORKS!
+    updateTweetCount(tweeterID, 1);
     res.json(newTweet.rows);
     console.log(newTweet.rows);
     //   console.log(`NEW USER ID: ${id}`);
@@ -45,6 +45,21 @@ app.post("/addTweet", async (req, res) => {
     console.error(err.message);
   }
 });
+
+const updateTweetCount = async (userID, increment) => {
+  try {
+    const update = await pool.query(
+      `UPDATE users SET tweets
+          = tweets + $1
+          WHERE id = $2 RETURNING *`,
+      [increment, userID]
+    );
+
+    return update;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
 
 const updateLikeCount = async (tweetID, increment) => {
   try {
@@ -76,6 +91,36 @@ const updateRetweetCount = async (tweetID, increment) => {
   }
 };
 
+const updateFollowerCount = async (userID, increment) => {
+  try {
+    const update = await pool.query(
+      `UPDATE users SET followers
+          = followers + $1
+          WHERE id = $2 RETURNING *`,
+      [increment, userID]
+    );
+
+    return update;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+const updateFollowingCount = async (userID, increment) => {
+  try {
+    const update = await pool.query(
+      `UPDATE users SET following
+          = following + $1
+          WHERE id = $2 RETURNING *`,
+      [increment, userID]
+    );
+
+    return update;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
 // check if liked
 
 app.get("/tweets/liked/:tweetid/:likerid", async (req, res) => {
@@ -95,11 +140,31 @@ app.get("/tweets/liked/:tweetid/:likerid", async (req, res) => {
     );
 
     res.send({ response: likedAlready.rows[0].case == "TRUE" });
-
-    // return likedAlready.rows[0].case == "TRUE";
-    // console.log(tweets.rows[0]);
   } catch (err) {
-    // console.log(err.message);
+    console.log(err.message);
+  }
+});
+
+// check if following
+app.get("/users/follow/:followerid/:followedid", async (req, res) => {
+  try {
+    const { followerid, followedid } = req.params;
+    const followingAlready = await pool.query(
+      `SELECT
+        CASE WHEN EXISTS
+        (
+              SELECT * FROM followings WHERE followerid = $1
+              AND followedid = $2
+        )
+        THEN 'TRUE'
+        ELSE 'FALSE'
+     END`,
+      [followerid, followedid]
+    );
+
+    res.send({ response: followingAlready.rows[0].case == "TRUE" });
+  } catch (err) {
+    console.log(err.message);
   }
 });
 
@@ -159,68 +224,18 @@ app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
   }
 });
 
-//like tweet
-// app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
-//   try {
-//     const { tweetID, likerID } = req.body;
-//     // const { tweetid, likerid } = req.params;
-
-//     const likedAlready = await pool.query(
-//       `SELECT
-//       CASE WHEN EXISTS
-//       (SELECT * FROM tweetLikes WHERE tweetID = $1 AND likerID = $2)
-//       THEN
-//       DELETE FROM tweetLikes WHERE
-//       $1 = tweetID AND
-//       $2 = likerID AND
-//       ELSE
-//       INSERT INTO tweetLikes
-//       (tweetID, likerID) VALUES ($1, $2)
-//       END
-//       SELECT
-//       CASE WHEN EXISTS
-//       (SELECT * FROM tweetLikes WHERE tweetID = $1 AND likerID = $2)
-//       THEN
-//       1
-//       ELSE
-//       0
-//       END
-//       `,
-//       [tweetID, likerID]
-//     );
-
-//     console.log(likedAlready);
-
-//     let resp;
-//     let increment;
-
-//     increment = -1;
-
-//     increment = 1;
-
-//     res.send(likedAlready);
-
-//     console.log(likedAlready.rows[0].case == "TRUE");
-
-//     // res.json(resp);
-//     // res.send({ liked: likedAlready.rows[0].case == "TRUE" });
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
-
 // follow user
-app.post("/users/follow/:followerid/:followedid", async (req, res) => {
+app.post("/users/follow", async (req, res) => {
   try {
-    // const { tweetID, likerID } = req.body;
-    const { followerid, followedid } = req.params;
+    const { followerid, followedid } = req.body;
+    // const { followerid, followedid } = req.params;
 
     const followedAlready = await pool.query(
       `SELECT
       CASE WHEN EXISTS
       (
-            SELECT * FROM followings WHERE followerID = $1
-            AND followedID = $2
+            SELECT * FROM followings WHERE followerid = $1
+            AND followedid = $2
       )
       THEN 'TRUE'
       ELSE 'FALSE'
@@ -243,7 +258,7 @@ app.post("/users/follow/:followerid/:followedid", async (req, res) => {
 
       increment = -1;
 
-      console.log("Like removed!");
+      console.log("unfollowed!");
     } else {
       resp = await pool.query(
         `INSERT INTO followings
@@ -253,13 +268,14 @@ app.post("/users/follow/:followerid/:followedid", async (req, res) => {
       );
 
       increment = 1;
-      console.log("Like added!");
+      console.log("followed");
     }
-    console.log(`INCREMENT = ${increment}`);
-    // updateLikeCount(tweetID, increment);
+    // console.log(`INCREMENT = ${increment}`);
+    updateFollowerCount(followedid, increment);
+    updateFollowingCount(followerid, increment);
 
     // res.json(resp);
-    res.send({ followed: followedAlready.rows[0].case == "TRUE" });
+    res.send({ status: followedAlready.rows[0].case !== "TRUE" });
   } catch (err) {
     console.error(err.message);
   }
@@ -281,12 +297,13 @@ app.delete("/users/:id", async (req, res) => {
 });
 
 // delete a tweet
-app.delete("/tweets/:id", async (req, res) => {
+app.delete("/tweets/:id/:tweeterid", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id, tweeterid } = req.params;
     const deleteTweet = await pool.query(`DELETE FROM tweets WHERE id = $1`, [
       id,
     ]);
+    updateTweetCount(tweeterid, -1);
     res.send("Deleted");
   } catch (err) {
     console.log(err.message);
@@ -331,6 +348,24 @@ app.get("/tweets/user/:id", async (req, res) => {
     const { id } = req.params;
     const tweets = await pool.query(
       `SELECT * FROM tweets WHERE tweeterID = $1 order BY tweets.id DESC`,
+      [id]
+    );
+
+    res.json(tweets);
+    console.log(tweets.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+// get user's home feed (all tweets of following accounts)
+app.get("/tweets/home/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tweets = await pool.query(
+      `SELECT * FROM tweets 
+      INNER JOIN (SELECT followedid FROM followings WHERE followerid = $1) AS res ON res.followedid = tweets.tweeterID
+      `,
       [id]
     );
 

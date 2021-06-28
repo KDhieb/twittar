@@ -6,7 +6,7 @@ import { fetchProfile, isLiked, likeTweet, deleteTweet } from "../fetcher";
 
 import "../css/components.css";
 
-const Tweet = ({ tweet, authUserID, forceUpdate }) => {
+const Tweet = ({ tweet, authUserID, forceUpdate, onDelete }) => {
   const { id, tweeterid, date, likes, retweets } = tweet;
   const text = tweet.tweet;
   const [username, setUsername] = useState(null);
@@ -35,7 +35,8 @@ const Tweet = ({ tweet, authUserID, forceUpdate }) => {
   };
 
   const onClickDelete = async () => {
-    await deleteTweet(id);
+    await deleteTweet(id, tweeterid);
+    if (onDelete !== null) onDelete();
     forceUpdate();
   };
 

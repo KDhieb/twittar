@@ -16,6 +16,12 @@ const fetchUserTweets = async (id) => {
   return data.rows;
 };
 
+const fetchHomeTweets = async (id) => {
+  const response = await fetch(`http://localhost:5000/tweets/home/user/${id}`);
+  const data = await response.json();
+  return data.rows;
+};
+
 const addTweet = async (id, text) => {
   const response = await fetch("http://localhost:5000/addTweet", {
     method: "POST",
@@ -68,8 +74,8 @@ const likeTweet = async (tweetID, likerID) => {
   return liked.liked;
 };
 
-const deleteTweet = async (tweetID) => {
-  await fetch(`http://localhost:5000/tweets/${tweetID}`, {
+const deleteTweet = async (tweetID, tweeterID) => {
+  await fetch(`http://localhost:5000/tweets/${tweetID}/${tweeterID}`, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -79,9 +85,38 @@ const deleteTweet = async (tweetID) => {
   return;
 };
 
-const checkIfFollowing = async (followerID, followedID) => {};
+const isFollowing = async (followerID, followedID) => {
+  const followedAlready = await fetch(
+    `http://localhost:5000/users/follow/${followerID}/${followedID}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
-const followUser = async (followerID, followedID) => {};
+  const data = await followedAlready.json();
+
+  return data.response;
+};
+
+const followUser = async (followerID, followedID) => {
+  const response = await fetch(`http://localhost:5000/users/follow`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      followerid: followerID,
+      followedid: followedID,
+    }),
+  });
+  const followed = await response.json();
+  return followed.status;
+};
 
 //TODO
 const isRetweeted = async (tweetID, retweeterID) => {};
@@ -93,10 +128,11 @@ export {
   fetchProfile,
   fetchTweets,
   fetchUserTweets,
+  fetchHomeTweets,
   addTweet,
   isLiked,
   likeTweet,
-  checkIfFollowing,
+  isFollowing,
   followUser,
   deleteTweet,
 };

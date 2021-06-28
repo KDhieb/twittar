@@ -5,14 +5,16 @@ import Navbar from "./components/Navbar";
 import Tweets from "./components/Tweets";
 import Profile from "./components/Profile";
 import AddTweet from "./components/AddTweet";
-import { fetchTweets } from "./fetcher";
+import { fetchTweets, fetchHomeTweets } from "./fetcher";
 
 function App() {
-  const authUserId = 2;
+  const authUserId = 6;
 
   const [homeTweets, setHomeTweets] = useState([]);
 
   const [exploreTweets, setExploreTweets] = useState([]);
+
+  const [userTweets, setUserTweets] = useState([]);
 
   const [update, setUpdate] = useState([false]);
 
@@ -20,10 +22,13 @@ function App() {
     setUpdate([!update[0]]);
   };
 
-  useEffect(() => {
-    fetchTweets().then((data) => {
-      setHomeTweets(data);
+  useEffect(async () => {
+    await fetchTweets().then((data) => {
       setExploreTweets(data);
+    });
+
+    await fetchHomeTweets(authUserId).then((data) => {
+      setHomeTweets(data);
     });
   }, [update]);
 

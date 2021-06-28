@@ -6,7 +6,7 @@ import Tweets from "./Tweets";
 import {
   fetchProfile,
   fetchUserTweets,
-  checkIfFollowing,
+  isFollowing,
   followUser,
 } from "../fetcher";
 
@@ -14,11 +14,15 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
   let { id } = useParams();
 
   const [profile, setProfile] = useState({});
+  const [followerCount, setFollowerCount] = useState([0]);
+  const [followingCount, setFollowingCount] = useState([0]);
+  const [tweetCount, setTweetCount] = useState([0]);
   const [imagelink, setImagelink] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [userTweets, setUserTweets] = useState([]);
-  const [following, setFollowing] = useState([false]);
+  const [followingStatus, setFollowingStatus] = useState([false]);
+  const [update, setUpdate] = useState([false]);
 
   useEffect(async () => {
     await fetchProfile(id).then((data) => {
@@ -26,24 +30,30 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
       setImagelink(data.imagelink);
       setUsername(data.username);
       setBio(data.bio);
+      setFollowerCount([data.followers]);
+      setFollowingCount([data.following]);
+      setTweetCount([data.tweets]);
     });
 
     if (id != authUserID) {
-      await checkIfFollowing(authUserID, id).then((data) => {
-        setFollowing(data);
+      await isFollowing(authUserID, id).then((data) => {
+        setFollowingStatus(data);
       });
     }
 
     await fetchUserTweets(id).then((data) => {
       setUserTweets(data);
     });
-  }, []);
+  }, [update]);
 
-  const onClickFollow = async (followerID, followedID) => {
-    alert("following");
+  const onClickFollow = async () => {
     await followUser(authUserID, id).then((data) => {
-      setFollowing(data);
+      setFollowingStatus(data);
     });
+  };
+
+  const onDelete = () => {
+    setUpdate([!update]);
   };
 
   return (
@@ -59,10 +69,10 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
         <p className="profile-bio">{bio}</p>
 
         <div className="grid-item profile-tabs nav nav-tabs">
-          <Link className="nav-link">Tweets</Link>
+          <Link className="nav-link">Tweets: {tweetCount}</Link>
           <Link className="nav-link">Likes</Link>
-          <Link className="nav-link">Followers</Link>
-          <Link className="nav-link">Following</Link>
+          <Link className="nav-link">Followers: {followerCount}</Link>
+          <Link className="nav-link">Following: {followingCount}</Link>
         </div>
 
         <div className="grid-item profile-buttons">
@@ -77,7 +87,7 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
                 onClickFollow(authUserID, parseInt(id));
               }}
             >
-              {following ? "Unfollow" : "Follow"}
+              {followingStatus ? "Unfollow" : "Follow"}
             </Link>
           )}
         </div>
@@ -86,6 +96,7 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
         tweets={userTweets}
         authUserID={authUserID}
         forceUpdate={forceUpdate}
+        onDelete={onDelete}
       ></Tweets>
     </>
   );
