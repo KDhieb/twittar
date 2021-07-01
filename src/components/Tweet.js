@@ -5,6 +5,7 @@ import DisplayPicture from "./DisplayPicture";
 import { fetchProfile, isLiked, likeTweet, deleteTweet } from "../fetcher";
 
 import "../css/components.css";
+import { Button } from "react-bootstrap";
 
 const Tweet = ({ tweet, authUserID, forceUpdate, onDelete }) => {
   const { id, tweeterid, date, likes, retweets } = tweet;
@@ -68,9 +69,9 @@ const Tweet = ({ tweet, authUserID, forceUpdate, onDelete }) => {
       </p>
       <p className="grid-item tweet-delete-wrapper">
         {tweeterid == authUserID && (
-          <button className="tweet-delete-button" onClick={onClickDelete}>
+          <Button className="tweet-delete-button" onClick={onClickDelete}>
             <BsX size={20} />
-          </button>
+          </Button>
         )}
       </p>
     </div>

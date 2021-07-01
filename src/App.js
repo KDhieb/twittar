@@ -9,8 +9,21 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import { fetchTweets, fetchHomeTweets } from "./fetcher";
 
+import {
+  withAuthenticator,
+  AmplifySignOut,
+  AmplifySignUp,
+  AmplifyAuthenticator,
+} from "@aws-amplify/ui-react";
+
+import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
+import Amplify, { Auth } from "aws-amplify";
+import awsconfig from "./aws-exports";
+
+Amplify.configure(awsconfig);
+
 function App() {
-  const authUserId = 6;
+  const authUserId = 4;
 
   const [homeTweets, setHomeTweets] = useState([]);
 
@@ -20,11 +33,21 @@ function App() {
 
   const [update, setUpdate] = useState([false]);
 
+  const [authState, setAuthState] = useState();
+  const [user, setUser] = useState();
+
   const forceUpdate = () => {
     setUpdate([!update[0]]);
   };
 
   useEffect(async () => {
+    onAuthUIStateChange((nextAuthState, authData) => {
+      setAuthState(nextAuthState);
+      setUser(authData);
+      alert(`authState: ${authState}`);
+      alert(`user: ${user}`);
+    });
+
     await fetchTweets().then((data) => {
       setExploreTweets(data);
     });
@@ -38,10 +61,34 @@ function App() {
     setHomeTweets(newTweets);
   };
 
+  onAuthUIStateChange((nextAuthState, authData) => {
+    if (nextAuthState === AuthState.SignedIn) {
+      console.log("user successfully signed in!");
+      console.log("user data: ", authData);
+    }
+    if (!authData) {
+      console.log("user is not signed in...");
+    }
+  });
+
+  onAuthUIStateChange((nextAuthState, authData) => {
+    if (nextAuthState === AuthState.SignedIn) {
+      console.log("user successfully signed in!");
+    }
+  });
+
+  const handleAuthStateChange = async (e) => {
+    await e;
+    alert(e);
+    // alert(`auth state change! Auth: ${authState} User: ${user}`);
+  };
+
+  // alert(authState);
+
   return (
     <div className="App">
       <Router>
-        <Navbar id={authUserId} />
+        <Navbar id={authUserId} forceUpdate={forceUpdate} />
 
         <Switch>
           <Route path="/" exact>
@@ -80,12 +127,17 @@ function App() {
           <Route path="/auth"></Route>
 
           <Route path="/signup">
-            <Signup />
+            <AmplifyAuthenticator
+              className="text-center"
+              handleAuthStateChange={handleAuthStateChange}
+            >
+              <AmplifySignUp />
+            </AmplifyAuthenticator>
           </Route>
 
-          <Route path="/login">
+          {/* <Route path="/login">
             <Login />
-          </Route>
+          </Route> */}
         </Switch>
 
         <Footer />

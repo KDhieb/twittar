@@ -5,6 +5,8 @@ import "../css/components.css";
 import Tweet from "./Tweet";
 
 const Tweets = ({ tweets, authUserID, forceUpdate, onDelete }) => {
+  const noTweetsMsg = "No Tweets to display!";
+
   return (
     <div className="tweets">
       {tweets.map((aTweet) => (
@@ -17,12 +19,7 @@ const Tweets = ({ tweets, authUserID, forceUpdate, onDelete }) => {
         ></Tweet>
       ))}
 
-      {tweets.length == 0 && (
-        <h3>
-          You are not following anyone yet! Follow others to keep up with their
-          tweets!
-        </h3>
-      )}
+      {tweets.length == 0 && <h3>{noTweetsMsg}</h3>}
     </div>
   );
 };

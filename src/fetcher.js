@@ -124,6 +124,30 @@ const isRetweeted = async (tweetID, retweeterID) => {};
 //TODO
 const retweetTweet = async (tweetID, retweeterID) => {};
 
+const updateProfile = async (
+  userID,
+  bio = null,
+  imagelink = null,
+  firstname = null,
+  lastname = null
+) => {
+  const response = await fetch(`http://localhost:5000/users/${userID}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      bio: bio,
+      imagelink: imagelink,
+      firstname: firstname,
+      lastname: lastname,
+    }),
+  });
+  const updated = await response.json();
+  return updated;
+};
+
 export {
   fetchProfile,
   fetchTweets,
@@ -135,4 +159,5 @@ export {
   isFollowing,
   followUser,
   deleteTweet,
+  updateProfile,
 };

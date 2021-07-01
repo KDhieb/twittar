@@ -2,7 +2,19 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
+const rateLimit = require("express-rate-limit");
+
 // middleware
+
+// ! ENABLE FOR DEPLOYMENT !!!!!!
+// app.set('trust proxy', 1); //
+
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100, // limit each IP to 100 requests per windowMs
+// });
+// app.use(limiter);
+
 app.use(cors());
 app.use(express.json());
 
@@ -168,7 +180,7 @@ app.get("/users/follow/:followerid/:followedid", async (req, res) => {
   }
 });
 
-// //like tweet
+// like tweet
 app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
   try {
     const { tweetID, likerID } = req.body;
@@ -377,14 +389,35 @@ app.get("/tweets/home/user/:id", async (req, res) => {
 });
 
 // update a profile
+// app.put("/users/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { username, firstname, lastname, bio, imagelink } = req.body;
+//     const updateProfile = await pool.query(
+//       `UPDATE users SET (username, firstname, lastname, bio, imagelink)
+//             = ($1, $2, $3, $4, $5)
+//             WHERE id = $6 RETURNING *`,
+//       [username, firstname, lastname, bio, imagelink, id]
+//     );
+//     res.json(updateProfile);
+//     console.log(updateProfile.rows);
+//   } catch (err) {
+//     console.error(err.message);
+//   }
+// });
+
 app.put("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { username, firstname, lastname, bio, imagelink } = req.body;
     const updateProfile = await pool.query(
-      `UPDATE users SET (username, firstname, lastname, bio, imagelink) 
-            = ($1, $2, $3, $4, $5) 
-            WHERE id = $6 RETURNING *`,
+      `UPDATE users SET 
+      username = COALESCE($1, username),
+      firstname = COALESCE($2, firstname),
+      lastname = COALESCE($3, lastname),
+      bio = COALESCE($4, bio), 
+      imagelink = COALESCE($5, imagelink)
+      WHERE id = $6 RETURNING *`,
       [username, firstname, lastname, bio, imagelink, id]
     );
     res.json(updateProfile);
