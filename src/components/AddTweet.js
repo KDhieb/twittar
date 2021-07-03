@@ -1,16 +1,16 @@
 import "../css/components.css";
-import { useState, useEffect } from "react";
-import { addTweet, fetchTweets } from "../fetcher";
+import { useState } from "react";
+import { addTweet } from "../fetcher";
 
-const AddTweet = ({ id, onAddTweet, forceUpdate }) => {
+const AddTweet = ({ authUserID, onAddTweet, forceUpdate }) => {
   const [text, setText] = useState("");
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
     if (text != "") {
       try {
-        console.log(id, text);
-        await addTweet(id, text);
+        console.log(authUserID[0], text);
+        await addTweet(authUserID[0], text);
         setText("");
         forceUpdate();
       } catch (err) {
@@ -30,14 +30,12 @@ const AddTweet = ({ id, onAddTweet, forceUpdate }) => {
           onChange={(e) => setText(e.target.value)}
           maxLength={255}
         />
-        {/* </div> */}
 
         <input
           className="btn btn-primary font-weight-bold"
           type="submit"
           value="Tweet"
         />
-        {/* </div> */}
       </form>
     </div>
   );

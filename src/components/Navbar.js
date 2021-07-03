@@ -1,28 +1,46 @@
 import "../css/components.css";
-import Button from "./Button";
-import { Link } from "react-router-dom";
+import { Link, withRouter, useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-import {
-  withAuthenticator,
-  AmplifySignOut,
-  AmplifyAuthenticator,
-} from "@aws-amplify/ui-react";
+import { AmplifySignOut } from "@aws-amplify/ui-react";
 
-import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
-import Amplify, { Auth } from "aws-amplify";
-import awsconfig from "../aws-exports";
+import { Auth } from "aws-amplify";
 
-const Navbar = (props) => {
+const Navbar = ({
+  authUserID,
+  forceUpdate,
+  authState,
+  handleAuthStateChange,
+  handleSignoutCallback,
+  updateChild,
+}) => {
+  const [authUserUsername, setAuthUserUsername] = useState("");
+  const [forceUpdateNavbar, setForceUpdateNavbar] = useState();
+
+  let history = useHistory();
+
+  useEffect(async () => {
+    let userInfo = await Auth.currentAuthenticatedUser();
+    setAuthUserUsername(userInfo.username);
+    setForceUpdateNavbar(updateChild);
+  }, [updateChild]);
+
   const onSignout = async () => {
-    await Auth.signOut().then((res) => {
-      alert(`Result from signout: ${res}`);
-    });
+    await Auth.signOut().then((res) => {});
+  };
+
+  const handleSignout = async (e) => {
+    handleAuthStateChange(e);
+    setAuthUserUsername(null);
+    handleSignoutCallback();
+    history.push("/login");
+    forceUpdate();
   };
 
   return (
     <div className="navbar">
       <h1 className="navbar-logo">
-        <Link to="/" exact>
+        <Link to={authUserID[0] ? "/" : "/explore"} exact>
           <img
             className="navbar-logo"
             src={`${process.env.PUBLIC_URL}/assets/images/twittar_white.png`}
@@ -30,34 +48,44 @@ const Navbar = (props) => {
         </Link>
       </h1>
       <div className="navbar-buttons">
-        <Link
-          className="navbar-item nav-link"
-          to="/"
-          text="Home"
-          onClick={props.forceUpdate}
-        >
-          Home
-        </Link>
+        {authUserUsername && (
+          <Link
+            className="navbar-item nav-link"
+            to="/"
+            text="Home"
+            onClick={forceUpdate}
+          >
+            Home
+          </Link>
+        )}
+
         <Link
           className="navbar-item nav-link"
           to="/explore"
           text="Explore"
-          onClick={props.forceUpdate}
+          onClick={forceUpdate}
         >
           Explore
         </Link>
-        <Link className="navbar-item nav-link" to={`/users/${props.id}`}>
-          Profile
-        </Link>
-        <Link className="navbar-item nav-link" to="/auth">
-          {/* <AmplifyAuthenticator> */}
-          <AmplifySignOut handleAuthStateChange={onSignout} />
-          {/* <AmplifyAuthenticator /> */}
-        </Link>
-        <Link className="navbar-item nav-link">Welcome, User {props.id}</Link>
+
+        {authUserUsername && (
+          <Link className="navbar-item nav-link" to={`/users/${authUserID}`}>
+            Profile
+          </Link>
+        )}
+
+        {authUserUsername && (
+          <AmplifySignOut handleAuthStateChange={handleSignout} />
+        )}
+
+        {!authUserUsername && (
+          <Link className="navbar-item nav-link" to={`/login`}>
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );
 };
 
-export default Navbar;
+export default withRouter(Navbar);

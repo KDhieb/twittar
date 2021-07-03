@@ -19,32 +19,37 @@ const Tweet = ({ tweet, authUserID, forceUpdate, onDelete }) => {
       setUsername(data.username);
       setDp(data.imagelink);
     });
-    isLiked(id, authUserID).then((data) => {
-      setLikeObj({ state: data, count: likes });
-    });
+    if (authUserID[0]) {
+      isLiked(id, authUserID[0]).then((data) => {
+        setLikeObj({ state: data, count: likes });
+      });
+    }
   }, []);
 
   const onClickLike = () => {
-    likeTweet(id, authUserID).then((data) => {
-      console.log(`data: ${data}`);
-      if (data) {
-        setLikeObj({ state: !data, count: likeObj.count - 1 });
-      } else {
-        setLikeObj({ state: !data, count: likeObj.count + 1 });
-      }
-    });
+    if (authUserID[0]) {
+      likeTweet(id, authUserID[0]).then((data) => {
+        console.log(`data: ${data}`);
+        if (data) {
+          setLikeObj({ state: !data, count: likeObj.count - 1 });
+        } else {
+          setLikeObj({ state: !data, count: likeObj.count + 1 });
+        }
+      });
+    } else {
+      alert("Signup to like tweets!");
+    }
   };
 
   const onClickDelete = async () => {
     await deleteTweet(id, tweeterid);
-    if (onDelete !== null) onDelete();
     forceUpdate();
   };
 
   return (
     <div className="tweet card">
       <DisplayPicture
-        src={`${process.env.PUBLIC_URL}/assets/images/${dp}`}
+        src={dp}
         alt="Display picture"
         classname="grid-item tweet-dp dp"
       />
@@ -68,7 +73,7 @@ const Tweet = ({ tweet, authUserID, forceUpdate, onDelete }) => {
         {` ${likeObj.count}`}
       </p>
       <p className="grid-item tweet-delete-wrapper">
-        {tweeterid == authUserID && (
+        {tweeterid === authUserID[0] && (
           <Button className="tweet-delete-button" onClick={onClickDelete}>
             <BsX size={20} />
           </Button>

@@ -19,15 +19,9 @@ const Tweets = ({ tweets, authUserID, forceUpdate, onDelete }) => {
         ></Tweet>
       ))}
 
-      {tweets.length == 0 && <h3>{noTweetsMsg}</h3>}
+      {tweets.length == 0 && <h2>{noTweetsMsg}</h2>}
     </div>
   );
-};
-
-Tweets.defaultProps = {
-  onDelete: () => {
-    console.log("on delete default function");
-  },
 };
 
 export default Tweets;

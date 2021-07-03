@@ -5,16 +5,13 @@ import Navbar from "./components/Navbar";
 import Tweets from "./components/Tweets";
 import Profile from "./components/Profile";
 import AddTweet from "./components/AddTweet";
-import Signup from "./components/Signup";
-import Login from "./components/Login";
-import { fetchTweets, fetchHomeTweets } from "./fetcher";
-
+import LoginForm from "./components/LoginForm";
 import {
-  withAuthenticator,
-  AmplifySignOut,
-  AmplifySignUp,
-  AmplifyAuthenticator,
-} from "@aws-amplify/ui-react";
+  fetchTweets,
+  fetchHomeTweets,
+  createUser,
+  fetchUserId,
+} from "./fetcher";
 
 import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Amplify, { Auth } from "aws-amplify";
@@ -23,77 +20,88 @@ import awsconfig from "./aws-exports";
 Amplify.configure(awsconfig);
 
 function App() {
-  const authUserId = 4;
-
   const [homeTweets, setHomeTweets] = useState([]);
-
   const [exploreTweets, setExploreTweets] = useState([]);
-
   const [userTweets, setUserTweets] = useState([]);
-
+  const [authState, setAuthState] = useState([]);
+  const [authUserId, setAuthUserId] = useState([]);
+  const [authUsername, setAuthUsername] = useState([]);
   const [update, setUpdate] = useState([false]);
-
-  const [authState, setAuthState] = useState();
-  const [user, setUser] = useState();
 
   const forceUpdate = () => {
     setUpdate([!update[0]]);
   };
 
   useEffect(async () => {
-    onAuthUIStateChange((nextAuthState, authData) => {
-      setAuthState(nextAuthState);
-      setUser(authData);
-      alert(`authState: ${authState}`);
-      alert(`user: ${user}`);
+    onAuthUIStateChange(async (nextAuthState, authData) => {
+      console.log(`nextauthState: ${nextAuthState}`);
+      setAuthState([nextAuthState]);
+
+      if (nextAuthState === AuthState.ConfirmSignUp) {
+        const signUpAttrs = authData.signUpAttrs;
+        const username = signUpAttrs.username;
+        const email = signUpAttrs.attributes.email;
+        // const phone = signUpAttrs.attributes.phone_number;
+        const userID = await createUser(username, email);
+        setAuthUserId([parseInt(userID)]);
+      }
+
+      if (nextAuthState === AuthState.SignedIn) {
+        const username = authData.username;
+        setAuthUsername([username]);
+        fetchUserId(username).then((id) => {
+          setAuthUserId([parseInt(id)]);
+        });
+      }
+    });
+
+    await Auth.currentAuthenticatedUser().then((data) => {
+      setAuthUsername([data.username]);
+      fetchUserId(data.username).then((id) => {
+        setAuthUserId([parseInt(id)]);
+      });
     });
 
     await fetchTweets().then((data) => {
       setExploreTweets(data);
     });
 
-    await fetchHomeTweets(authUserId).then((data) => {
-      setHomeTweets(data);
-    });
+    if (authUserId) {
+      await fetchHomeTweets(authUserId).then((data) => {
+        setHomeTweets(data);
+      });
+    }
   }, [update]);
 
   const onAddTweet = (newTweets) => {
     setHomeTweets(newTweets);
   };
 
-  onAuthUIStateChange((nextAuthState, authData) => {
-    if (nextAuthState === AuthState.SignedIn) {
-      console.log("user successfully signed in!");
-      console.log("user data: ", authData);
-    }
-    if (!authData) {
-      console.log("user is not signed in...");
-    }
-  });
-
-  onAuthUIStateChange((nextAuthState, authData) => {
-    if (nextAuthState === AuthState.SignedIn) {
-      console.log("user successfully signed in!");
-    }
-  });
-
-  const handleAuthStateChange = async (e) => {
-    await e;
-    alert(e);
-    // alert(`auth state change! Auth: ${authState} User: ${user}`);
+  const handleSignoutCallback = async (e) => {
+    setAuthUserId([]);
   };
 
-  // alert(authState);
+  const handleAuthStateChange = async (e) => {
+    console.log("handling auth state...");
+  };
 
   return (
     <div className="App">
       <Router>
-        <Navbar id={authUserId} forceUpdate={forceUpdate} />
+        <withRouter></withRouter>
+        <Navbar
+          authUserID={authUserId}
+          forceUpdate={forceUpdate}
+          authState={authState}
+          handleAuthStateChange={handleAuthStateChange}
+          handleSignoutCallback={handleSignoutCallback}
+          updateChild={update}
+        />
 
         <Switch>
           <Route path="/" exact>
             <AddTweet
-              id={authUserId}
+              authUserID={authUserId}
               onAddTweet={onAddTweet}
               forceUpdate={forceUpdate}
             />
@@ -126,18 +134,12 @@ function App() {
 
           <Route path="/auth"></Route>
 
-          <Route path="/signup">
-            <AmplifyAuthenticator
-              className="text-center"
+          <Route path="/login">
+            <LoginForm
               handleAuthStateChange={handleAuthStateChange}
-            >
-              <AmplifySignUp />
-            </AmplifyAuthenticator>
+              forceUpdate={forceUpdate}
+            />
           </Route>
-
-          {/* <Route path="/login">
-            <Login />
-          </Route> */}
         </Switch>
 
         <Footer />

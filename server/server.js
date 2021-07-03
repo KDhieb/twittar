@@ -22,15 +22,15 @@ app.use(express.json());
 
 app.post("/createUser", async (req, res) => {
   try {
-    const { username, firstname, lastname, bio, imagelink } = req.body;
+    const { username, firstname, lastname, bio, imagelink, email } = req.body;
     const newUser = await pool.query(
       `INSERT INTO users
-     (username, firstname, lastname, bio, imagelink, datejoined) VALUES (
-        $1, $2, $3, $4, $5, CURRENT_DATE) RETURNING *`,
-      [username, firstname, lastname, bio, imagelink]
+     (username, firstname, lastname, bio, imagelink, email, datejoined) VALUES (
+        $1, $2, $3, $4, $5, $6, CURRENT_DATE) RETURNING *`,
+      [username, firstname, lastname, bio, imagelink, email]
     );
     const id = newUser.rows[0].id; // WORKS!
-    res.json(newUser.rows);
+    res.send({ id: newUser.rows[0].id });
     console.log(newUser);
     console.log(`NEW USER ID: ${id}`);
   } catch (err) {
@@ -339,6 +339,23 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
+// search by username
+app.get("/users/usernames/:username", async (req, res) => {
+  try {
+    const { username } = req.params;
+    const profile = await pool.query(
+      `SELECT * FROM users WHERE
+        username = $1`,
+      [username]
+    );
+
+    res.json(profile);
+    console.log(profile.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
 // get tweets
 app.get("/tweets", async (req, res) => {
   try {
@@ -406,6 +423,7 @@ app.get("/tweets/home/user/:id", async (req, res) => {
 //   }
 // });
 
+// update user profile
 app.put("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;

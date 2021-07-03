@@ -1,3 +1,15 @@
+// API Request methods
+
+const defaultImageLink = process.env.REACT_APP_S3_DEFAULT_IMG_URL;
+
+const fetchUserId = async (username) => {
+  const response = await fetch(
+    `http://localhost:5000/users/usernames/${username}`
+  );
+  const data = await response.json();
+  return data.rows[0].id;
+};
+
 const fetchProfile = async (id) => {
   const response = await fetch(`http://localhost:5000/users/${id}`);
   const data = await response.json();
@@ -75,6 +87,7 @@ const likeTweet = async (tweetID, likerID) => {
 };
 
 const deleteTweet = async (tweetID, tweeterID) => {
+  alert(`tweetid: ${tweetID} tweeterID: ${tweetID}`);
   await fetch(`http://localhost:5000/tweets/${tweetID}/${tweeterID}`, {
     headers: {
       Accept: "application/json",
@@ -118,10 +131,10 @@ const followUser = async (followerID, followedID) => {
   return followed.status;
 };
 
-//TODO
+// TODO
 const isRetweeted = async (tweetID, retweeterID) => {};
 
-//TODO
+// TODO
 const retweetTweet = async (tweetID, retweeterID) => {};
 
 const updateProfile = async (
@@ -148,6 +161,27 @@ const updateProfile = async (
   return updated;
 };
 
+const createUser = async (username, email) => {
+  const response = await fetch("http://localhost:5000/createUser", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: username,
+      email: email,
+      firstname: null,
+      lastname: null,
+      bio: "I've just created a #twittar profile!",
+      imagelink: defaultImageLink,
+    }),
+  });
+
+  const idObj = await response.json();
+  return idObj.id;
+};
+
 export {
   fetchProfile,
   fetchTweets,
@@ -160,4 +194,6 @@ export {
   followUser,
   deleteTweet,
   updateProfile,
+  createUser,
+  fetchUserId,
 };
