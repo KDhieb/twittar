@@ -40,7 +40,7 @@ const Navbar = ({
   return (
     <div className="navbar">
       <h1 className="navbar-logo">
-        <Link to={authUserID[0] ? "/" : "/explore"} exact>
+        <Link to={authUserID[0] ? "/home" : "/"} exact>
           <img
             className="navbar-logo"
             src={`${process.env.PUBLIC_URL}/assets/images/twittar_white.png`}
@@ -51,7 +51,7 @@ const Navbar = ({
         {authUserUsername && (
           <Link
             className="navbar-item nav-link"
-            to="/"
+            to="/home"
             text="Home"
             onClick={forceUpdate}
           >
@@ -61,7 +61,7 @@ const Navbar = ({
 
         <Link
           className="navbar-item nav-link"
-          to="/explore"
+          to="/"
           text="Explore"
           onClick={forceUpdate}
         >

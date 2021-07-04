@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Tweets from "./components/Tweets";
 import Profile from "./components/Profile";
 import AddTweet from "./components/AddTweet";
 import LoginForm from "./components/LoginForm";
+import Error404 from "./components/Error404";
 import {
   fetchTweets,
   fetchHomeTweets,
@@ -33,6 +39,10 @@ function App() {
   };
 
   useEffect(async () => {
+    fetchTweets().then((data) => {
+      setExploreTweets(data);
+    });
+
     onAuthUIStateChange(async (nextAuthState, authData) => {
       console.log(`nextauthState: ${nextAuthState}`);
       setAuthState([nextAuthState]);
@@ -62,9 +72,9 @@ function App() {
       });
     });
 
-    await fetchTweets().then((data) => {
-      setExploreTweets(data);
-    });
+    // await fetchTweets().then((data) => {
+    //   setExploreTweets(data);
+    // });
 
     if (authUserId) {
       await fetchHomeTweets(authUserId).then((data) => {
@@ -100,19 +110,13 @@ function App() {
 
         <Switch>
           <Route path="/" exact>
-            <AddTweet
-              authUserID={authUserId}
-              onAddTweet={onAddTweet}
-              forceUpdate={forceUpdate}
-            />
-            <Tweets
-              tweets={homeTweets}
-              authUserID={authUserId}
-              forceUpdate={forceUpdate}
-            />
-          </Route>
-
-          <Route path="/explore" exact>
+            {authUserId[0] && (
+              <AddTweet
+                authUserID={authUserId}
+                onAddTweet={onAddTweet}
+                forceUpdate={forceUpdate}
+              />
+            )}
             <Tweets
               tweets={exploreTweets}
               authUserID={authUserId}
@@ -120,8 +124,22 @@ function App() {
             />
           </Route>
 
+          <Route path="/home" exact>
+            {/* <AddTweet
+              authUserID={authUserId}
+              onAddTweet={onAddTweet}
+              forceUpdate={forceUpdate}
+            /> */}
+            <Tweets
+              tweets={homeTweets}
+              authUserID={authUserId}
+              forceUpdate={forceUpdate}
+            />
+          </Route>
+
           <Route
             path="/users/:id"
+            exact
             render={({ match }) => (
               <Profile
                 key={window.location.pathname}
@@ -132,14 +150,20 @@ function App() {
             )}
           ></Route>
 
-          <Route path="/auth"></Route>
+          <Route path="/auth" exact></Route>
 
-          <Route path="/login">
+          <Route path="/login" exact>
             <LoginForm
               handleAuthStateChange={handleAuthStateChange}
               forceUpdate={forceUpdate}
             />
           </Route>
+
+          <Route path="*">
+            <Error404 />
+          </Route>
+
+          <Redirect path="/404" />
         </Switch>
 
         <Footer />

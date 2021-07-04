@@ -9,17 +9,18 @@ const Tweets = ({ tweets, authUserID, forceUpdate, onDelete }) => {
 
   return (
     <div className="tweets">
-      {tweets.map((aTweet) => (
-        <Tweet
-          key={aTweet.id}
-          tweet={aTweet}
-          authUserID={authUserID}
-          forceUpdate={forceUpdate}
-          onDelete={onDelete}
-        ></Tweet>
-      ))}
+      {tweets &&
+        tweets.map((aTweet) => (
+          <Tweet
+            key={aTweet.id}
+            tweet={aTweet}
+            authUserID={authUserID}
+            forceUpdate={forceUpdate}
+            onDelete={onDelete}
+          ></Tweet>
+        ))}
 
-      {tweets.length == 0 && <h2>{noTweetsMsg}</h2>}
+      {!tweets || (tweets.length === 0 && <h2>{noTweetsMsg}</h2>)}
     </div>
   );
 };

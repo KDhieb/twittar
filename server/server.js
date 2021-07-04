@@ -7,7 +7,7 @@ const rateLimit = require("express-rate-limit");
 // middleware
 
 // ! ENABLE FOR DEPLOYMENT !!!!!!
-// app.set('trust proxy', 1); //
+// app.set("trust proxy", 1); //
 
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -20,6 +20,7 @@ app.use(express.json());
 
 //ROUTES
 
+// *  create a new user
 app.post("/createUser", async (req, res) => {
   try {
     const { username, firstname, lastname, bio, imagelink, email } = req.body;
@@ -38,7 +39,7 @@ app.post("/createUser", async (req, res) => {
   }
 });
 
-// add tweet
+// *  post a new tweet
 app.post("/addTweet", async (req, res) => {
   try {
     const { tweeterID, tweet, likes, retweets } = req.body;
@@ -58,6 +59,7 @@ app.post("/addTweet", async (req, res) => {
   }
 });
 
+// *  update user's tweet count
 const updateTweetCount = async (userID, increment) => {
   try {
     const update = await pool.query(
@@ -73,6 +75,7 @@ const updateTweetCount = async (userID, increment) => {
   }
 };
 
+// *  update user's like count
 const updateLikeCount = async (tweetID, increment) => {
   try {
     const update = await pool.query(
@@ -88,6 +91,7 @@ const updateLikeCount = async (tweetID, increment) => {
   }
 };
 
+// *  update user's retweet count
 const updateRetweetCount = async (tweetID, increment) => {
   try {
     const update = await pool.query(
@@ -103,6 +107,7 @@ const updateRetweetCount = async (tweetID, increment) => {
   }
 };
 
+// *  update user's follower count
 const updateFollowerCount = async (userID, increment) => {
   try {
     const update = await pool.query(
@@ -118,6 +123,7 @@ const updateFollowerCount = async (userID, increment) => {
   }
 };
 
+// * update user's following count
 const updateFollowingCount = async (userID, increment) => {
   try {
     const update = await pool.query(
@@ -133,8 +139,7 @@ const updateFollowingCount = async (userID, increment) => {
   }
 };
 
-// check if liked
-
+// * check if a given tweet is liked by a specific user
 app.get("/tweets/liked/:tweetid/:likerid", async (req, res) => {
   try {
     const { tweetid, likerid } = req.params;
@@ -157,7 +162,7 @@ app.get("/tweets/liked/:tweetid/:likerid", async (req, res) => {
   }
 });
 
-// check if following
+// * check if a given user is followed by a specific user
 app.get("/users/follow/:followerid/:followedid", async (req, res) => {
   try {
     const { followerid, followedid } = req.params;
@@ -180,7 +185,7 @@ app.get("/users/follow/:followerid/:followedid", async (req, res) => {
   }
 });
 
-// like tweet
+// * like or unlike a tweet
 app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
   try {
     const { tweetID, likerID } = req.body;
@@ -236,7 +241,7 @@ app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
   }
 });
 
-// follow user
+// * follow or unfollow a user
 app.post("/users/follow", async (req, res) => {
   try {
     const { followerid, followedid } = req.body;
@@ -293,7 +298,7 @@ app.post("/users/follow", async (req, res) => {
   }
 });
 
-// delete a user
+// * delete a user's account
 app.delete("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -308,7 +313,7 @@ app.delete("/users/:id", async (req, res) => {
   }
 });
 
-// delete a tweet
+// * delete a given tweet
 app.delete("/tweets/:id/:tweeterid", async (req, res) => {
   try {
     const { id, tweeterid } = req.params;
@@ -322,7 +327,7 @@ app.delete("/tweets/:id/:tweeterid", async (req, res) => {
   }
 });
 
-// get profile
+//* fetch a user's profile by id
 app.get("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -339,7 +344,7 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
-// search by username
+//* fetch a user's profile by username
 app.get("/users/usernames/:username", async (req, res) => {
   try {
     const { username } = req.params;
@@ -356,7 +361,7 @@ app.get("/users/usernames/:username", async (req, res) => {
   }
 });
 
-// get tweets
+//* fetch all tweets
 app.get("/tweets", async (req, res) => {
   try {
     //   const { id } = req.params;
@@ -371,7 +376,7 @@ app.get("/tweets", async (req, res) => {
   }
 });
 
-// get user's tweets
+//* fetch a specific user's tweets
 app.get("/tweets/user/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -387,7 +392,7 @@ app.get("/tweets/user/:id", async (req, res) => {
   }
 });
 
-// get user's home feed (all tweets of following accounts)
+// * get user's home feed (all tweets by accounts followed)
 app.get("/tweets/home/user/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -405,25 +410,7 @@ app.get("/tweets/home/user/:id", async (req, res) => {
   }
 });
 
-// update a profile
-// app.put("/users/:id", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { username, firstname, lastname, bio, imagelink } = req.body;
-//     const updateProfile = await pool.query(
-//       `UPDATE users SET (username, firstname, lastname, bio, imagelink)
-//             = ($1, $2, $3, $4, $5)
-//             WHERE id = $6 RETURNING *`,
-//       [username, firstname, lastname, bio, imagelink, id]
-//     );
-//     res.json(updateProfile);
-//     console.log(updateProfile.rows);
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
-
-// update user profile
+// * update a user's profile
 app.put("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -444,40 +431,6 @@ app.put("/users/:id", async (req, res) => {
     console.error(err.message);
   }
 });
-
-// app.get("/getUsers", async (req, res) => {
-//   try {
-//     // const {tweeterID, tweet} = req.body
-//     const newUser = await pool.query(`SELECT * FROM users`, (req, res) => {
-//       // console.log(res.rows)
-//     });
-
-//     // res.json(newTweet)
-//     // console.log(newUser)
-//     // return newTweet;
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
-
-// app.post("/addTweet", async (req, res) => {
-//   try {
-//     const { tweeterID, tweet } = req.body;
-//     const newTweet = await pool.query(
-//       `INSERT INTO tweets
-//         (tweeterID, tweet, likes, retweets, date)
-//         VALUES ($1, $2, 0, 0, CURRENT_DATE)`,
-//       [tweeterID, tweet]
-//     );
-
-//     res.json(newTweet);
-//     return newTweet;
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
-
-//
 
 app.listen(5000, () => {
   console.log("Server started at port 5000!");

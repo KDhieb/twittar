@@ -44,12 +44,6 @@ code {
   height: 5%;
 }
 
-.footer {
-  background-color: #1d8dee;
-  color: black;
-  margin-top: 10%;
-}
-
 .tweets {
   /* background-color: #1E2128; */
   background-color: white;
@@ -70,6 +64,7 @@ code {
   max-width: 500px;
   min-width: 500px;
   grid-auto-rows: 1fr;
+  height: 200px;
 }
 
 .dp {
@@ -219,11 +214,21 @@ code {
 }
 
 .profile-buttons {
-  grid-row-start: 1;
+  grid-row-start: 2;
   grid-row-end: 3;
 
   grid-column-start: 3;
   grid-column-end: 4;
+  align-self: center;
+}
+
+.profile-button-2 {
+  grid-row-start: 1;
+  grid-row-end: 3;
+
+  grid-column-start: 2;
+  grid-column-end: 3;
+
   align-self: center;
 }
 
@@ -308,4 +313,54 @@ code {
   min-width: 300px;
   border: 1px solid lightgray;
   border-radius: 1%;
+}
+
+.footer {
+  height: 250px;
+  background-color: #1d8dee;
+  color: black;
+  margin-top: 10%;
+  display: grid;
+  gap: 5%;
+}
+
+.footer * {
+  color: white;
+}
+
+.footer-about {
+  /* border: 1px solid black; */
+  grid-column-start: 2;
+  grid-column-end: 3;
+
+  grid-row-start: 0;
+  grid-row-end: 2;
+  margin: 2% 2%;
+  max-width: 50%;
+  align-items: center;
+  margin-left: 12%;
+}
+
+.footer-copyright {
+  display: flex;
+  justify-content: space-evenly;
+  grid-column-start: 2;
+  grid-column-end: 3;
+
+  grid-row-start: 2;
+  grid-row-end: 3;
+  /* margin-left: 30%; */
+}
+
+.footer-social-wrapper {
+  grid-column-start: 2;
+  grid-column-end: 3;
+
+  grid-row-start: 0;
+  grid-row-end: 2;
+  margin: 2% 2%;
+}
+
+.error-page {
+  height: 300px;
 }

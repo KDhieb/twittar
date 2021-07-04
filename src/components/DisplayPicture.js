@@ -12,10 +12,3 @@ const DisplayPicture = ({ key, src, alt, classname, update }) => {
 };
 
 export default DisplayPicture;
-
-/* <img
-          key={imagelink}
-          className="grid-item profile-dp dp"
-          src={imagelink}
-          alt="Display picture"
-        /> */

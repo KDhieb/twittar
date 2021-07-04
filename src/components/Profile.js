@@ -34,14 +34,16 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
 
   useEffect(async () => {
     await fetchProfile(id).then((data) => {
-      setProfile(data);
-      setImagelink(data.imagelink);
-      setUsername(data.username);
-      setBio(data.bio);
-      setFollowerCount([data.followers]);
-      setFollowingCount([data.following]);
-      setTweetCount([data.tweets]);
-      setFullname(`${data.firstname} ${data.lastname}`);
+      if (data) {
+        setProfile(data);
+        setImagelink(data.imagelink);
+        setUsername(data.username);
+        setBio(data.bio);
+        setFollowerCount([data.followers]);
+        setFollowingCount([data.following]);
+        setTweetCount([data.tweets]);
+        setFullname(`${data.firstname} ${data.lastname}`);
+      }
     });
 
     if (id !== authUserID[0]) {
@@ -117,7 +119,15 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
           update={update}
         />
 
-        {editing && <input type="file" onChange={imageSelectedHandler} />}
+        {editing && (
+          <input
+            className="grid-item profile-button-2"
+            type="file"
+            name="upload dp"
+            accept="image/png, image/jpeg"
+            onChange={imageSelectedHandler}
+          />
+        )}
 
         <p className="profile-username"> @{username}</p>
 
@@ -158,7 +168,7 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
                 onClickFollow(authUserID[0], parseInt(id));
               }}
             >
-              {followingStatus ? "Unfollow" : "Follow"}
+              {followingStatus && authUserID[0] ? "Unfollow" : "Follow"}
             </Link>
           )}
         </div>
