@@ -2,9 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import DisplayPicture from "./DisplayPicture";
 import Tweets from "./Tweets";
-import Amplify, { Auth, Storage } from "aws-amplify";
-// import Amplify, { Storage } from "aws-amplify";
-// require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+import { Storage } from "aws-amplify";
 
 import {
   fetchProfile,
@@ -155,7 +153,6 @@ const Profile = ({ dp, authUserID, forceUpdate, onAddTweet }) => {
 
         <div className="grid-item profile-tabs nav nav-tabs">
           <Link className="nav-link">Tweets: {tweetCount}</Link>
-          {/* <Link className="nav-link">Likes</Link> */}
           <Link className="nav-link">Followers: {followerCount}</Link>
           <Link className="nav-link">Following: {followingCount}</Link>
         </div>
