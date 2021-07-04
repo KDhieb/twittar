@@ -13,8 +13,9 @@ import {
   followUser,
   updateProfile,
 } from "../fetcher";
+import AddTweet from "./AddTweet";
 
-const Profile = ({ dp, authUserID, forceUpdate }) => {
+const Profile = ({ dp, authUserID, forceUpdate, onAddTweet }) => {
   let { id } = useParams();
 
   const [profile, setProfile] = useState({});
@@ -63,16 +64,17 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
     const uniqueKey = `${username}-DP`;
     const base = await process.env.REACT_APP_S3_IMAGE_BASE_URL;
     const imageURL = `${base}/${uniqueKey}`;
-
-    await Storage.put(uniqueKey, selectedFile).then((resp) => {
-      // alert("STORED");
-      setNewImageURL(imageURL);
-      setImagelink("");
-      setImagelink(newImageURL);
-      updateProfile(id, bio, newImageURL);
-      setSelectedFile(null);
-      setUpdate([!update[0]]);
-    });
+    if (newImageURL) {
+      await Storage.put(uniqueKey, selectedFile).then((resp) => {
+        // alert("STORED");
+        setNewImageURL(imageURL);
+        setImagelink("");
+        setImagelink(newImageURL);
+        updateProfile(id, bio, newImageURL);
+        setSelectedFile(null);
+        setUpdate([!update[0]]);
+      });
+    }
   }, [newImageURL]);
 
   const onClickFollow = async () => {
@@ -106,6 +108,11 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
 
       setNewImageURL(imageURL);
     }
+  };
+
+  const onAddTweetCaller = () => {
+    setUpdate([!update[0]]);
+    onAddTweet();
   };
 
   return (
@@ -173,7 +180,15 @@ const Profile = ({ dp, authUserID, forceUpdate }) => {
           )}
         </div>
       </div>
+      <AddTweet
+        authUserID={authUserID}
+        onAddTweet={onAddTweetCaller}
+        forceUpdate={forceUpdate}
+      ></AddTweet>
+
       <Tweets
+        key={update}
+        param={update}
         tweets={userTweets}
         authUserID={authUserID}
         forceUpdate={forceUpdate}

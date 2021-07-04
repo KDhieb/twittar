@@ -125,16 +125,15 @@ function App() {
           </Route>
 
           <Route path="/home" exact>
-            {/* <AddTweet
-              authUserID={authUserId}
-              onAddTweet={onAddTweet}
-              forceUpdate={forceUpdate}
-            /> */}
-            <Tweets
-              tweets={homeTweets}
-              authUserID={authUserId}
-              forceUpdate={forceUpdate}
-            />
+            {authUserId[0] ? (
+              <Tweets
+                tweets={homeTweets}
+                authUserID={authUserId}
+                forceUpdate={forceUpdate}
+              />
+            ) : (
+              <Error404 />
+            )}
           </Route>
 
           <Route
@@ -146,6 +145,7 @@ function App() {
                 id={match.params.id}
                 authUserID={authUserId}
                 forceUpdate={forceUpdate}
+                onAddTweet={onAddTweet}
               />
             )}
           ></Route>

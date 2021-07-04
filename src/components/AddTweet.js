@@ -13,6 +13,7 @@ const AddTweet = ({ authUserID, onAddTweet, forceUpdate }) => {
         await addTweet(authUserID[0], text);
         setText("");
         forceUpdate();
+        onAddTweet();
       } catch (err) {
         console.error(err.message);
       }
