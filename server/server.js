@@ -5,6 +5,7 @@ const pool = require("./db");
 const rateLimit = require("express-rate-limit");
 
 // middleware
+const port = process.env.PORT;
 
 // ! ENABLE FOR DEPLOYMENT !!!!!!
 app.set("trust proxy", 1); //
@@ -432,6 +433,6 @@ app.put("/users/:id", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("Server started at port 5000!");
+app.listen(port, () => {
+  console.log(`Server started at port ${port}!`);
 });
