@@ -1,13 +1,13 @@
 CREATE DATABASE twittar;
 
 CREATE TABLE IF NOT EXISTS users (
-         id SERIAL PRIMARY KEY
+         id SERIAL PRIMARY KEY,
          username VARCHAR(20),
          firstname VARCHAR(20),
          lastname VARCHAR(20),
          bio VARCHAR(255),
          imagelink TEXT,
-         datejoined DATE
+         datejoined DATE,
          UNIQUE (username));
 
 CREATE TABLE IF NOT EXISTS tweets (

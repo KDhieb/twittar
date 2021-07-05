@@ -1,11 +1,9 @@
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const fs = require("fs");
-const { Pool, Client } = require("pg");
+const { Pool } = require("pg");
 
 var env = process.env;
-
-console.log(process.env.DB_USER);
 
 const config = {
   user: env.DB_USER,

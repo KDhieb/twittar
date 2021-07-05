@@ -7,10 +7,11 @@ const rateLimit = require("express-rate-limit");
 const router = express.Router();
 
 // middleware
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || "8080";
 
 // ! ENABLE FOR DEPLOYMENT !!!!!!
-app.set("trust proxy", 1); //
+// app.set("trust proxy", 1); //
+app.set("port", PORT);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -440,5 +441,5 @@ app.put("/users/:id", async (req, res) => {
 });
 
 app.listen(5000, () => {
-  console.log(`Server started at port ${port}!`);
+  console.log(`Server started at port ${PORT}!`);
 });
