@@ -9,7 +9,6 @@ const AddTweet = ({ authUserID, onAddTweet, forceUpdate }) => {
     e.preventDefault();
     if (text != "") {
       try {
-        console.log(authUserID[0], text);
         await addTweet(authUserID[0], text);
         setText("");
         forceUpdate();

@@ -33,10 +33,8 @@ app.post("/createUser", async (req, res) => {
     );
     const id = newUser.rows[0].id; // WORKS!
     res.send({ id: newUser.rows[0].id });
-    console.log(newUser);
-    console.log(`NEW USER ID: ${id}`);
   } catch (err) {
-    console.error(err.message);
+    console.log(err.message);
   }
 });
 
@@ -53,10 +51,8 @@ app.post("/addTweet", async (req, res) => {
     //   const id = newUser.rows[0].id; // WORKS!
     updateTweetCount(tweeterID, 1);
     res.json(newTweet.rows);
-    console.log(newTweet.rows);
-    //   console.log(`NEW USER ID: ${id}`);
   } catch (err) {
-    console.error(err.message);
+    console.log(err.message);
   }
 });
 
@@ -205,8 +201,6 @@ app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
       [tweetID, likerID]
     );
 
-    console.log(likedAlready);
-
     let resp;
     let increment;
 
@@ -219,8 +213,6 @@ app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
       );
 
       increment = -1;
-
-      console.log("Like removed!");
     } else {
       resp = await pool.query(
         `INSERT INTO tweetLikes
@@ -230,9 +222,7 @@ app.post("/tweets/like/:tweetid/:likerid", async (req, res) => {
       );
 
       increment = 1;
-      console.log("Like added!");
     }
-    console.log(`INCREMENT = ${increment}`);
     updateLikeCount(tweetID, increment);
 
     // res.json(resp);
@@ -261,8 +251,6 @@ app.post("/users/follow", async (req, res) => {
       [followerid, followedid]
     );
 
-    console.log(followedAlready);
-
     let resp;
     let increment;
 
@@ -275,8 +263,6 @@ app.post("/users/follow", async (req, res) => {
       );
 
       increment = -1;
-
-      console.log("unfollowed!");
     } else {
       resp = await pool.query(
         `INSERT INTO followings
@@ -286,13 +272,10 @@ app.post("/users/follow", async (req, res) => {
       );
 
       increment = 1;
-      console.log("followed");
     }
-    // console.log(`INCREMENT = ${increment}`);
     updateFollowerCount(followedid, increment);
     updateFollowingCount(followerid, increment);
 
-    // res.json(resp);
     res.send({ status: followedAlready.rows[0].case !== "TRUE" });
   } catch (err) {
     console.error(err.message);
@@ -339,7 +322,6 @@ app.get("/users/:id", async (req, res) => {
     );
 
     res.json(profile);
-    console.log(profile.rows[0]);
   } catch (err) {
     console.log(err.message);
   }
@@ -356,7 +338,6 @@ app.get("/users/usernames/:username", async (req, res) => {
     );
 
     res.json(profile);
-    console.log(profile.rows[0]);
   } catch (err) {
     console.log(err.message);
   }
@@ -365,13 +346,11 @@ app.get("/users/usernames/:username", async (req, res) => {
 //* fetch all tweets
 app.get("/tweets", async (req, res) => {
   try {
-    //   const { id } = req.params;
     const tweets = await pool.query(
       `SELECT * FROM tweets order BY tweets.id DESC`
     );
 
     res.json(tweets);
-    console.log(tweets.rows[0]);
   } catch (err) {
     console.log(err.message);
   }
@@ -387,7 +366,6 @@ app.get("/tweets/user/:id", async (req, res) => {
     );
 
     res.json(tweets);
-    console.log(tweets.rows[0]);
   } catch (err) {
     console.log(err.message);
   }
@@ -405,7 +383,6 @@ app.get("/tweets/home/user/:id", async (req, res) => {
     );
 
     res.json(tweets);
-    console.log(tweets.rows[0]);
   } catch (err) {
     console.log(err.message);
   }
@@ -427,7 +404,6 @@ app.put("/users/:id", async (req, res) => {
       [username, firstname, lastname, bio, imagelink, id]
     );
     res.json(updateProfile);
-    console.log(updateProfile.rows);
   } catch (err) {
     console.error(err.message);
   }

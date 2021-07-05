@@ -29,7 +29,6 @@ const Tweet = ({ tweet, authUserID, forceUpdate, onDelete }) => {
   const onClickLike = () => {
     if (authUserID[0]) {
       likeTweet(id, authUserID[0]).then((data) => {
-        console.log(`data: ${data}`);
         if (data) {
           setLikeObj({ state: !data, count: likeObj.count - 1 });
         } else {

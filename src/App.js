@@ -44,7 +44,6 @@ function App() {
     });
 
     onAuthUIStateChange(async (nextAuthState, authData) => {
-      console.log(`nextauthState: ${nextAuthState}`);
       setAuthState([nextAuthState]);
 
       if (nextAuthState === AuthState.ConfirmSignUp) {
@@ -92,7 +91,7 @@ function App() {
   };
 
   const handleAuthStateChange = async (e) => {
-    console.log("handling auth state...");
+    // empty
   };
 
   return (
