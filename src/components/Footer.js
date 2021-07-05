@@ -7,8 +7,8 @@ const Footer = () => {
       <div className="grid-item footer-about">
         <h2 className="text-center">About Twittar</h2>
         <p>
-          This is personal project made to replicate a Twitter-like application
-          for educational purposes. Made with &#9829; using React!
+          This is a personal project made to create a Twitter-like application
+          for self-learning. Built with &#9829; using React!
         </p>
       </div>
 

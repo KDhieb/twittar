@@ -316,7 +316,7 @@ code {
 }
 
 .footer {
-  height: 250px;
+  height: 275px;
   background-color: #1d8dee;
   color: black;
   margin-top: 10%;
@@ -347,11 +347,11 @@ code {
   grid-column-start: 2;
   grid-column-end: 3;
 
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 5;
+  grid-row-end: 6;
   /* margin-left: 30%; */
 }
-
+/* 
 .footer-social-wrapper {
   grid-column-start: 2;
   grid-column-end: 3;
@@ -359,7 +359,7 @@ code {
   grid-row-start: 0;
   grid-row-end: 2;
   margin: 2% 2%;
-}
+} */
 
 .error-page {
   height: 300px;

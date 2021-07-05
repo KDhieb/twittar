@@ -4,6 +4,8 @@ const cors = require("cors");
 const pool = require("./db");
 const rateLimit = require("express-rate-limit");
 
+const router = express.Router();
+
 // middleware
 const port = process.env.PORT;
 
@@ -15,9 +17,37 @@ const limiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
-
 app.use(cors());
 app.use(express.json());
+
+// Static routes
+// Serve React build files in production
+if (process.env.NODE_ENV === "production") {
+  const path = require("path");
+  // Serve the frontend's index.html file at the root route
+  router.get("/", (req, res) => {
+    res.cookie("XSRF-TOKEN", req.csrfToken());
+    res.sendFile(
+      path.resolve(__dirname, "../../frontend", "build", "index.html")
+    );
+  });
+  // Serve the static assets in the frontend's build folder
+  router.use(express.static(path.resolve("../build")));
+  // Serve the frontend's index.html file at all other routes NOT starting with /api
+  router.get(/^(?!\/?api).*/, (req, res) => {
+    res.cookie("XSRF-TOKEN", req.csrfToken());
+    res.sendFile(
+      path.resolve(__dirname, "../../frontend", "build", "index.html")
+    );
+  });
+}
+// Add a XSRF-TOKEN cookie in development
+if (process.env.NODE_ENV !== "production") {
+  router.get("/api/csrf/restore", (req, res) => {
+    res.cookie("XSRF-TOKEN", req.csrfToken());
+    res.status(201).json({});
+  });
+}
 
 //ROUTES
 
@@ -409,6 +439,6 @@ app.put("/users/:id", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.listen(5000, () => {
   console.log(`Server started at port ${port}!`);
 });

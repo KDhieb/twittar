@@ -22,8 +22,10 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "serve -s build && npm run dev",
-    "prebuild": "echo $AWS_EXPORTS_CONTENT > ./src/aws-exports.js",
+    "start": "npm run dev",
+    "heroku-prebuild": "echo $AWS_EXPORTS_CONTENT > ./src/aws-exports.js",
+    "heroku-postbuild": "npm run build",
+    "install": "npm --prefix server install server && npm install",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
