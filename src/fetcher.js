@@ -2,11 +2,14 @@
 
 const defaultImageLink = process.env.REACT_APP_S3_DEFAULT_IMG_URL;
 
+const prefix =
+  process.env.NODE_ENV === "production"
+    ? "https://gotwittar.herokuapp.com"
+    : "http://localhost:5000";
+
 const fetchUserId = async (username) => {
   try {
-    const response = await fetch(
-      `http://localhost:5000/users/usernames/${username}`
-    );
+    const response = await fetch(`${prefix}/users/usernames/${username}`);
     const data = await response.json();
     return data.rows[0].id;
   } catch (err) {
@@ -16,7 +19,7 @@ const fetchUserId = async (username) => {
 
 const fetchProfile = async (id) => {
   try {
-    const response = await fetch(`http://localhost:5000/users/${id}`);
+    const response = await fetch(`${prefix}/users/${id}`);
     const data = await response.json();
     return data.rows[0];
   } catch (err) {
@@ -26,7 +29,7 @@ const fetchProfile = async (id) => {
 
 const fetchTweets = async () => {
   try {
-    const response = await fetch("http://localhost:5000/tweets");
+    const response = await fetch(`${prefix}/tweets`);
     const data = await response.json();
     return data.rows;
   } catch (err) {
@@ -36,7 +39,7 @@ const fetchTweets = async () => {
 
 const fetchUserTweets = async (id) => {
   try {
-    const response = await fetch(`http://localhost:5000/tweets/user/${id}`);
+    const response = await fetch(`${prefix}/tweets/user/${id}`);
     const data = await response.json();
     return data.rows;
   } catch (err) {
@@ -46,9 +49,7 @@ const fetchUserTweets = async (id) => {
 
 const fetchHomeTweets = async (id) => {
   try {
-    const response = await fetch(
-      `http://localhost:5000/tweets/home/user/${id}`
-    );
+    const response = await fetch(`${prefix}/tweets/home/user/${id}`);
     const data = await response.json();
     return data.rows;
   } catch (err) {
@@ -58,7 +59,7 @@ const fetchHomeTweets = async (id) => {
 
 const addTweet = async (id, text) => {
   try {
-    const response = await fetch("http://localhost:5000/addTweet", {
+    const response = await fetch(`${prefix}/addTweet`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -79,7 +80,7 @@ const addTweet = async (id, text) => {
 const isLiked = async (tweetID, likerID) => {
   try {
     const likedAlready = await fetch(
-      `http://localhost:5000/tweets/liked/${tweetID}/${likerID}`,
+      `${prefix}/tweets/liked/${tweetID}/${likerID}`,
       {
         method: "GET",
         headers: {
@@ -100,7 +101,7 @@ const isLiked = async (tweetID, likerID) => {
 const likeTweet = async (tweetID, likerID) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/tweets/like/${tweetID}/${likerID}`,
+      `${prefix}/tweets/like/${tweetID}/${likerID}`,
       {
         method: "POST",
         headers: {
@@ -122,7 +123,7 @@ const likeTweet = async (tweetID, likerID) => {
 
 const deleteTweet = async (tweetID, tweeterID) => {
   try {
-    await fetch(`http://localhost:5000/tweets/${tweetID}/${tweeterID}`, {
+    await fetch(`${prefix}/tweets/${tweetID}/${tweeterID}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -138,7 +139,7 @@ const deleteTweet = async (tweetID, tweeterID) => {
 const isFollowing = async (followerID, followedID) => {
   try {
     const followedAlready = await fetch(
-      `http://localhost:5000/users/follow/${followerID}/${followedID}`,
+      `${prefix}/users/follow/${followerID}/${followedID}`,
       {
         method: "GET",
         headers: {
@@ -157,7 +158,7 @@ const isFollowing = async (followerID, followedID) => {
 
 const followUser = async (followerID, followedID) => {
   try {
-    const response = await fetch(`http://localhost:5000/users/follow`, {
+    const response = await fetch(`${prefix}/users/follow`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -189,7 +190,7 @@ const updateProfile = async (
   lastname = null
 ) => {
   try {
-    const response = await fetch(`http://localhost:5000/users/${userID}`, {
+    const response = await fetch(`${prefix}/users/${userID}`, {
       method: "PUT",
       headers: {
         Accept: "application/json",
@@ -211,7 +212,7 @@ const updateProfile = async (
 
 const createUser = async (username, email) => {
   try {
-    const response = await fetch("http://localhost:5000/createUser", {
+    const response = await fetch(`${prefix}/createUser`, {
       method: "POST",
       headers: {
         Accept: "application/json",
