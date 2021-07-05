@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "prebuild": "amplify init",
+    "prebuild": "npm install amplify",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
