@@ -1,6 +1,9 @@
 {
   "name": "twitter-lite",
   "version": "0.1.0",
+  "engines": {
+    "node": "14.x"
+  },
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^1.2.4",
