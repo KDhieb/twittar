@@ -1,0 +1,16 @@
+{
+  "auth": {
+    "twitterlite0029f427": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
+  "storage": {
+    "twittarImages": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  }
+}
