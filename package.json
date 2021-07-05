@@ -20,48 +20,9 @@
     "react-scripts": "4.0.3",
     "web-vitals": "^1.0.1"
   },
-  "env": {
-    "variables": {
-      "key": "value"
-    }
-  },
-  "backend": {
-    "phases": {
-      "build": {
-        "commands": [
-          "amplifyPush --simple"
-        ]
-      }
-    }
-  },
-  "frontend": {
-    "phases": {
-      "preBuild": {
-        "commands": [
-          "npm install"
-        ]
-      },
-      "build": {
-        "commands": [
-          "npm run build"
-        ]
-      }
-    },
-    "artifacts": {
-      "baseDirectory": "build",
-      "files": [
-        "**/*"
-      ]
-    },
-    "cache": {
-      "paths": [
-        "node_modules/**/*"
-      ]
-    }
-  },
   "scripts": {
     "start": "react-scripts start",
-    "build": "amplifyPush --simple && react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "client": "npm start",
