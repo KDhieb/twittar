@@ -1,12 +1,16 @@
 CREATE DATABASE twittar;
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
          id SERIAL PRIMARY KEY,
          username VARCHAR(20),
          firstname VARCHAR(20),
          lastname VARCHAR(20),
          bio VARCHAR(255),
          imagelink TEXT,
+         email VARCHAR(50),
+         tweets INT DEFAULT 0,
+         followers INT DEFAULT 0,
+         following INT DEFAULT 0,
          datejoined DATE,
          UNIQUE (username));
 
@@ -40,6 +44,11 @@ CREATE TABLE IF NOT EXISTS retweets (
         FOREIGN KEY(tweetID) REFERENCES tweets(id) ON DELETE CASCADE,
         FOREIGN KEY(retweeterID) REFERENCES users(id) ON DELETE CASCADE);
 
+
+-- example: insert a new user
+      INSERT INTO users
+     (username, firstname, lastname, bio, imagelink, email, datejoined) VALUES (
+        'testtweeter1', 'Bob', 'Smith', 'Testing', 'https://imgur.com/gallery/oPUjMTX','likemikekd@hotmail.com', CURRENT_DATE) RETURNING *;
 
 
 

@@ -11,6 +11,11 @@ const config = {
   host: env.DB_HOST,
   database: env.DB_DATABASE,
   port: env.DB_PORT,
+  ssl: true,
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: { require: true },
+  },
 };
 
 const pool = new Pool(config);
