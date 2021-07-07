@@ -12,7 +12,7 @@ const router = express.Router();
 
 // ! ENABLE FOR DEPLOYMENT !!!!!!
 // app.set("trust proxy", 1); //
-app.set("port", PORT);
+// app.set("port", PORT);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
