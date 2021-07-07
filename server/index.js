@@ -11,7 +11,7 @@ const router = express.Router();
 // const PORT = process.env.PORT || "8080";
 
 // ! ENABLE FOR DEPLOYMENT !!!!!!
-// app.set("trust proxy", 1); //
+app.set("trust proxy", 1); //
 // app.set("port", PORT);
 
 const limiter = rateLimit({
@@ -418,12 +418,8 @@ app.put("/users/:id", async (req, res) => {
 });
 
 const host = "0.0.0.0";
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-app.listen(port, host, function () {
-  console.log(`Server started at port ${port}`);
+app.listen(PORT, host, function () {
+  console.log(`Server started at port ${PORT}`);
 });
-
-// app.listen(PORT, () => {
-//   console.log(`Server started at port ${PORT}!`);
-// });
