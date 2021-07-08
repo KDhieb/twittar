@@ -5,7 +5,9 @@ const defaultImageLink = process.env.REACT_APP_S3_DEFAULT_IMG_URL;
 const prefix =
   process.env.NODE_ENV === "production"
     ? "https://gotwittar.herokuapp.com"
-    : "http://localhost:5000";
+    : "http://localhost:3000";
+
+// const prefix = "http://localhost:8080";
 
 const fetchUserId = async (username) => {
   try {
