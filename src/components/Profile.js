@@ -177,11 +177,13 @@ const Profile = ({ dp, authUserID, forceUpdate, onAddTweet }) => {
           )}
         </div>
       </div>
-      <AddTweet
-        authUserID={authUserID}
-        onAddTweet={onAddTweetCaller}
-        forceUpdate={forceUpdate}
-      ></AddTweet>
+      {authUserID[0] && (
+        <AddTweet
+          authUserID={authUserID}
+          onAddTweet={onAddTweetCaller}
+          forceUpdate={forceUpdate}
+        ></AddTweet>
+      )}
 
       <Tweets
         key={update}
@@ -193,12 +195,6 @@ const Profile = ({ dp, authUserID, forceUpdate, onAddTweet }) => {
       ></Tweets>
     </>
   );
-};
-
-Profile.defaultProps = {
-  id: 1,
-  dp: "dp1.jpg",
-  authUserId: 2,
 };
 
 export default Profile;
