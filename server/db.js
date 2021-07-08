@@ -20,7 +20,7 @@ var env = process.env;
 // const pool = new Pool(config);
 
 const pool = new Pool({
-  connectionString: env.DB_UI,
+  connectionString: env.DB_URI,
   ssl: {
     rejectUnauthorized: false,
   },
