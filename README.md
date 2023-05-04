@@ -13,6 +13,9 @@
 - Heroku Postgres for cloud access to relational database, and Express to create API endpoints for database requests
 
 
+## Demo
+
+![twittarDemo](https://user-images.githubusercontent.com/47509883/236125614-1e19f86f-b93a-4d66-899c-3d2dbc2861b8.gif)
 
 
 
